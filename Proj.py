@@ -2,12 +2,13 @@
 # CLASS Project
 # PYTHON IMPLEMENTATION: BASIC DATA ANALYSIS
 # Date: 
-# Student 1: 
+# Student 1:  
 # Student 2: Ramon Plascencia
-# Student 3: 
+# Student 3: Nicholas Romasanta
 # Description: Implementation Basic Data Analysis Routines
 import pandas as pd
 import time
+import func as func
 df_loaded = 0 # Flag for if we have loaded a csv into a dataframe
 
 main_menu = "Main Menu:" 
@@ -48,27 +49,13 @@ def init_loadPrompt():
     load_prompt += "\n" + getTime() + ": "
     return load_prompt
 
-# ---------- Function to help verify input ---------- # 
-def prompt_verification(select, _min, _max) :
-    if (select): # Verify that something was input
-        check = select.isnumeric() # make sure it is ALL numbers (NO char or whitespace)
-        if (check): # If all num is true
-            select = int(select) # Convert input into an integer for comparison
-            if (select < _min or select > _max): # Check if input was in range
-                return -1
-            else: 
-                return select
-        else: # If all num is false
-            return -1
-    else: # No input, return -1
-        return -1
 
 # ---------- Function to display menu  ---------- # 
 def menu(prompt, _min, _max): 
     verify = 0
     while verify == 0:
         user_input = input(prompt)  # Prompt user for input
-        user_selection = prompt_verification(user_input, _min, _max) # will receive -1 for invalid inputs
+        user_selection = func.prompt_verification(user_input, _min, _max) # will receive -1 for invalid inputs
         if (user_selection < 0): # If invalid input 
             print("Please enter a valid option\n") 
             verify = 0 
@@ -111,9 +98,13 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
         if (option == 2):
             explore_opt = menu(explore_menu, 21, 25)
             if (explore_opt == 21):
-                print("You selected list all columns\n")
+                print("\n(21) List all columns:")
+                print("**********")
+                func.listColumns(df)
             elif (explore_opt == 22): 
-                print("You selected drop all columns\n")
+                #using this as a test
+                df = func.dropColumn(df)
+                #print("You selected drop all columns\n")
             elif (explore_opt == 23):
                 print("You selected describe all columns\n")
             elif (explore_opt == 24):
