@@ -31,28 +31,77 @@ def listColumns(df):
 
 # Drop a column
 def dropColumn(df):
-    valid = 1
-
     print("\n(22) Drop Columns:")
     print("\n**********")
     print("\nSelect a column number to drop from the list:")
     num_col = listColumns(df)
     array = df.columns
     selected_col = 0 # Temporary, will be changed
-
-    while(valid):
-        selected_col = input("Select: ")
-        check = prompt_verification(selected_col, 1, num_col-1)
-        if check < 0:
-            print("Please select a valid option!")
-            valid = 1
-        else:
-            valid = 0
+    
+    selected_col = checkValid(num_col, selected_col)
 
     colName = array[int(selected_col)-1]
     newDf = df.drop(colName, axis=1)
     return newDf
 
+# ---------- Column Stats ---------- #
+def colStat(df):
+    print("\n(23) Describe Columns:")
+    print("\n**********")
+    print("\nSelect a column number from the list:")
+    num_col = listColumns(df)
+    array = df.columns
+    selected_col = 0 # Temporary, will be changed
+
+    selected_col = checkValid(num_col, selected_col)
+    
+    colName = array[int(selected_col)-1]
+    newArr = df[colName]
+    
+    number = countFunc(newArr)
+    print("Count: " + str(number))
+    
+    number = unCountFunc(newArr)
+    print("Unique: " + str(number))
+    
+
+# ---------- Count Function ---------- #
+def countFunc(newArr):
+    newArr = newArr.dropna(how='any',axis=0)
+    newArr = dropZero(newArr)
+    counter = 0
+    for item in newArr:
+        if item:
+            counter += 1
+    return counter
+
+# ---------- Unique Count Function ---------- #
+def unCountFunc(Arr):
+    Arr = Arr.dropna(how='any',axis=0)
+    newArr = Arr.drop_duplicates()
+    newArr = dropZero(newArr)
+    counter = 0
+    for item in newArr:
+        if item:
+            counter += 1
+    return counter
 
 
+# ---------- checks if the input is valid ---------- #
+def checkValid(num, selected):
+    valid = 1
+    
+    while(valid):
+        selected = input("Select: ")
+        check = prompt_verification(selected, 1, num-1)
+        if check < 0:
+            print("Please select a valid option!")
+            valid = 1
+        else:
+            valid = 0
+    return selected
+
+def dropZero(array):
+    array = [value for value in array if value != 0]
+    return array
 
