@@ -29,12 +29,14 @@ explore_menu += "\n(23) Describe columns:"
 explore_menu += "\n(24) Search Element in Column:"
 explore_menu += "\n(25) Back to Main Menu:"
 
+
 # ---------- Function to get current time ---------- #
 def getTime():
     global local_time
     t = time.localtime()
     local_time = time.strftime("%H:%M:%S", t)
     return local_time
+
 
 # ---------- Function to initialize load data menu ---------- # 
 # This is so that the strings will have updated their times every time this is called
@@ -65,6 +67,7 @@ def menu(prompt, _min, _max):
         else: # If a valid option was selected
             verify = 1
     return user_selection
+
 
 # ~~~~~~~~~~ Start ~~~~~~~~~~ #
 cont = True
@@ -107,6 +110,8 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
                 #print("You selected drop all columns\n")
             elif (explore_opt == 23):
                 print("You selected describe all columns\n")
+                func.colStat(df)
+                # test
             elif (explore_opt == 24):
                 print("You selected search element in all columns\n")
             elif (explore_opt == 25):
@@ -123,5 +128,9 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
         print("ValueError:", e)
     except KeyboardInterrupt:
         print("\nPython program cannot handle SIGINT signal, enter '5' to exit the program")
+    except TypeError as e:
+        print("A debug error has occured somewhere", e)
+    except FileNotFoundError:
+        print("This file either does not exist or an unexpected error has occured")
 
 
