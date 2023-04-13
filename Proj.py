@@ -130,6 +130,8 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
         print("\nPython program cannot handle SIGINT signal, enter '5' to exit the program")
     except TypeError as e:
         print("A debug error has occured somewhere", e)
+    except NameError:
+        print("File has not been loaded yet")
     except FileNotFoundError:
         print("This file either does not exist or an unexpected error has occured")
 
