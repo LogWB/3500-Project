@@ -63,7 +63,10 @@ def colStat(df):
     
     number = unCountFunc(newArr)
     print("Unique: " + str(number))
-    
+
+    #Used to test
+    #number = minFunc(newArr)
+    #print("Minimum: " + str(number))
 
 # ---------- Count Function ---------- #
 def countFunc(newArr):
@@ -105,3 +108,28 @@ def dropZero(array):
     array = [value for value in array if value != 0]
     return array
 
+# -------- Quicksort -------- #
+def partition(arr, lo, hi):
+    pivot = arr[hi]
+    i = low - 1
+    for j in range(lo, hi):
+        if array[j] <= pivot:
+            i = i + 1
+            (arr[i], arr[j]) = (arr[j], arr[i])
+    (arr[i + 1], arr[hi]) = (arr[hi], arr[i + 1])
+    return i + 1
+ 
+def quick_sort(arr, lo, hi):
+    if lo < hi:
+        pi = partition(arr, lo, hi)
+        quick_sort(arr, lo, pi - 1)
+        quick_sort(arr, pi + 1, hi)
+
+# -------- Min Function -------- #
+def minFunc(Arr):
+    Arr = Arr.dropna(how='any',axis=0)
+    newArr = dropZero(newArr)
+    newArr = quick_sort(newArr, 0, len(newArr) - 1)
+    minimum = newArr[0]
+    return minimum
+	

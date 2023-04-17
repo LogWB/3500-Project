@@ -2,7 +2,7 @@
 # CLASS Project
 # PYTHON IMPLEMENTATION: BASIC DATA ANALYSIS
 # Date: 
-# Student 1:  
+# Student 1: Bradley Tate 
 # Student 2: Ramon Plascencia
 # Student 3: Nicholas Romasanta
 # Description: Implementation Basic Data Analysis Routines
