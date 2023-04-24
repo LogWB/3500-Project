@@ -20,7 +20,7 @@ def createArray(df, colName):
     array = df[colName].values
     return array
 
-# List out all the column names in dataframe
+# ---------- List Columns ---------- #
 def listColumns(df):
     counter = 1
     for col in df.columns: 
@@ -29,7 +29,7 @@ def listColumns(df):
     print("\n")
     return counter # Return the number of columns we have, used in other functions
 
-# Drop a column
+# ---------- Drop Column ---------- #
 def dropColumn(df):
     print("\n(22) Drop Columns:")
     print("\n**********")

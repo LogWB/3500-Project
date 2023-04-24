@@ -7,7 +7,7 @@
 # Student 3: Nicholas Romasanta
 # Description: Implementation Basic Data Analysis Routines
 import pandas as pd
-import time
+import time 
 import func as func
 df_loaded = 0 # Flag for if we have loaded a csv into a dataframe
 
@@ -78,11 +78,19 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
             load_menu = init_loadPrompt() # Give user the load data menu
             load_opt = menu(load_menu, 1, 3)
             if (load_opt == 1):
+                start_time = time.time()
                 df = pd.read_csv('Crime_Data_from_2017_to_2019.csv')
+                df = df.drop("Crm Cd 2", axis=1)
+                df = df.drop("Crm Cd 3", axis=1)
+                df = df.drop("Crm Cd 4", axis=1)
+                df = df.drop("Cross Street", axis=1)
+                end_time = time.time()
+                total_time = (end_time) - (start_time)
+                total_time = round(total_time, 5)
                 print(getTime() + " Total Columns Read: " + str(len(df.columns))) 
                 print(getTime() + " Total Rows Read: " + str(len(df)))
-                print("File loaded successfully!")    
-                print("Time to load <blank> sec\n")
+                print("File loaded successfully!") 
+                print("Time to load " + str(total_time) + " seconds\n")
                 df_loaded = 1
             elif (load_opt == 2): 
                 df = pd.read_csv('Crime_Data_from_2020_to_2021.csv')
