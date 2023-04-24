@@ -135,7 +135,7 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
     except ValueError as e:
         print("ValueError:", e)
     except KeyboardInterrupt:
-        print("\nPython program cannot handle SIGINT signal, enter '5' to exit the program")
+        print("\nReturn to Main Menu")
     except TypeError as e:
         print("A debug error has occured somewhere", e)
     except NameError:
