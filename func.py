@@ -44,6 +44,21 @@ def dropColumn(df):
     newDf = df.drop(colName, axis=1)
     return newDf
 
+# ---------- Mean Function ---------- 
+def getMean(df, colName):
+    column_list = df[colName]
+    size = countFunc(df[colName])
+    list(column_list)
+    summation = 0
+    for x in column_list:
+        summation = int(x) + summation
+    #print("The summation is: " + str(summation))
+    #print("The array size is: " + str(size))
+    #print("The mean is: " + str(summation/size))
+    #pandamean = df[colName].mean()
+    #print("The mean according to pandas is: " + str(pandamean))
+    mean = summation/size
+    return mean
 # ---------- Column Stats ---------- #
 def colStat(df):
     print("\n(23) Describe Columns:")
@@ -64,6 +79,8 @@ def colStat(df):
     number = unCountFunc(newArr)
     print("Unique: " + str(number))
 
+    mean = getMean(df, colName)
+    print("Mean: " + str(mean))
     #Used to test
     #number = minFunc(newArr)
     #print("Minimum: " + str(number))
@@ -88,6 +105,25 @@ def unCountFunc(Arr):
         if item:
             counter += 1
     return counter
+
+
+# ---------- Print Column Contents ---------- #
+# Using to check column contents and also stores it in an array
+# This isn't necessary for the project
+def printColumn(df):
+    num_col = listColumns(df)
+    selected_col = 0
+    print("Selected a column to print out: ")
+    selected_col = checkValid(num_col, selected_col)
+    print("SELECTED_COL = " + selected_col)
+    array = df.columns
+    colName = array[int(selected_col)-1]
+    print("You selected: " + colName)
+    # \/ This will print it as a column \/
+    # print(df[colName].to_string(index=False))
+    column_list = df[colName]
+    #print(col_list)
+
 
 
 # ---------- checks if the input is valid ---------- #
