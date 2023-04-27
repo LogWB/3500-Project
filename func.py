@@ -59,6 +59,7 @@ def getMean(df, colName):
     #print("The mean according to pandas is: " + str(pandamean))
     mean = summation/size
     return mean
+
 # ---------- Column Stats ---------- #
 def colStat(df):
     print("\n(23) Describe Columns:")
@@ -78,9 +79,19 @@ def colStat(df):
     
     number = unCountFunc(newArr)
     print("Unique: " + str(number))
-
+    
+    # Mean Section
     mean = getMean(df, colName)
     print("Mean: " + str(mean))
+    
+    # Variance Section using mean
+    vari = varianceFunc(lambda x: x > 0, newArr, mean)
+    print("Variance: " + str(vari))
+    
+    # Standard Deviation from Variance
+    stddev = vari**0.5
+    print("Standard Deviation: " + str(stddev))
+
     #Used to test
     #number = minFunc(newArr)
     #print("Minimum: " + str(number))
@@ -107,6 +118,18 @@ def unCountFunc(Arr):
     return counter
 
 
+# ---------- Variance Function ---------- #
+def varianceFunc(func, Arr, mean):
+    count = 0
+    variance = 0
+    for item in Arr:
+        if func(item):
+            variance += ((item - mean)**2)
+            count += 1
+    variance = variance/count
+    return variance
+
+
 # ---------- Print Column Contents ---------- #
 # Using to check column contents and also stores it in an array
 # This isn't necessary for the project
@@ -123,6 +146,7 @@ def printColumn(df):
     # print(df[colName].to_string(index=False))
     column_list = df[colName]
     #print(col_list)
+
 
 
 
