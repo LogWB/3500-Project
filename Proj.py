@@ -128,7 +128,7 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
                 print("[PLACEHOLDER] Data has been analzyed [PLACEHOLDER]\n")
         if (option == 4):
             if(df_loaded==1):
-                print(df)
+                func.printDataFrame(df)
             else:
                 print("No dataframe has been loaded\n")
     # Error Handling

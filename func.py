@@ -38,7 +38,7 @@ def dropColumn(df):
     array = df.columns
     selected_col = 0 # Temporary, will be changed
     
-    selected_col = checkValid(num_col, selected_col)
+    selected_col = checkValid(1, num_col, selected_col)
 
     colName = array[int(selected_col)-1]
     newDf = df.drop(colName, axis=1)
@@ -69,7 +69,7 @@ def colStat(df):
     array = df.columns
     selected_col = 0 # Temporary, will be changed
 
-    selected_col = checkValid(num_col, selected_col)
+    selected_col = checkValid(1, num_col, selected_col)
     
     colName = array[int(selected_col)-1]
     newArr = df[colName]
@@ -137,7 +137,7 @@ def printColumn(df):
     num_col = listColumns(df)
     selected_col = 0
     print("Selected a column to print out: ")
-    selected_col = checkValid(num_col, selected_col)
+    selected_col = checkValid(1, num_col, selected_col)
     print("SELECTED_COL = " + selected_col)
     array = df.columns
     colName = array[int(selected_col)-1]
@@ -147,16 +147,17 @@ def printColumn(df):
     column_list = df[colName]
     #print(col_list)
 
-
-
-
 # ---------- checks if the input is valid ---------- #
-def checkValid(num, selected):
+# The first parameter passed (num) is the maximum value aka the limit
+# The first is the minimum value 
+# The second should be the maximum value plus one because it will be subtracted by one when passed to prompt_verification
+# The third is what the user input
+def checkValid(min_val, num, selected):
     valid = 1
     
     while(valid):
         selected = input("Select: ")
-        check = prompt_verification(selected, 1, num-1)
+        check = prompt_verification(selected, min_val, num-1)
         if check < 0:
             print("Please select a valid option!")
             valid = 1
@@ -193,3 +194,25 @@ def minFunc(Arr):
     minimum = newArr[0]
     return minimum
 	
+# -------- Print Function -------- #
+def printDataFrame(df):
+    print("\n(4) Select how many rows you would like to print:")
+    print("**********")
+    print("41) 100 Rows ")
+    print("42) 1000 Rows ")
+    print("43) 5000 Rows ")
+    selected = 0 # Temporary, will be changed
+    
+    selected = checkValid(41, 44, selected)
+    selected = int(selected)
+    
+    pd.set_option('display.max_rows', None)
+    pd.set_option('display.max_columns', None)
+    pd.set_option('display.width', 200)
+
+    if (selected == 41):
+        print(df.head(100))
+    elif (selected == 42):
+        print(df.head(1000))
+    elif (selected == 43):
+        print(df.head(5000))
