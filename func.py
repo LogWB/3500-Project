@@ -91,10 +91,17 @@ def colStat(df):
     # Standard Deviation from Variance
     stddev = vari**0.5
     print("Standard Deviation: " + str(stddev))
-
+    
+    convertedArr = convertInt(newArr) 
+    
+    #print(newArr)
+    sorted_arr = merge_sort(convertedArr)
+    #print(newArr)
+    #print(sorted_arr)
+    #print("According to this: " + str(newArr[len(newArr)-1]))
     #Used to test
-    #number = minFunc(newArr)
-    #print("Minimum: " + str(number))
+    number = minFunc(sorted_arr)
+    print("Minimum: " + str(number))
 
 # ---------- Count Function ---------- #
 def countFunc(newArr):
@@ -169,29 +176,51 @@ def dropZero(array):
     array = [value for value in array if value != 0]
     return array
 
-# -------- Quicksort -------- #
-def partition(arr, lo, hi):
-    pivot = arr[hi]
+def partition(arr, low, high):
+    pivot = len(arr[high])/2
     i = low - 1
-    for j in range(lo, hi):
-        if array[j] <= pivot:
-            i = i + 1
-            (arr[i], arr[j]) = (arr[j], arr[i])
-    (arr[i + 1], arr[hi]) = (arr[hi], arr[i + 1])
-    return i + 1
- 
-def quick_sort(arr, lo, hi):
-    if lo < hi:
-        pi = partition(arr, lo, hi)
-        quick_sort(arr, lo, pi - 1)
-        quick_sort(arr, pi + 1, hi)
+    j = high + 1
+
+    while True:
+        i += 1
+        while arr[i] < pivot:
+            i += 1
+
+        j -= 1
+        while arr[j] > pivot:
+            j -= 1
+
+        if i >= j:
+            return j
+
+        arr[i], arr[j] = arr[j], arr[i]
+
+
+def quicksort(arr):
+    stack = []
+    stack.append((0, len(arr) - 1))
+
+    while stack:
+        low, high = stack.pop()
+
+        if low < high:
+            pivot = partition(arr, low, high)
+
+            if pivot - low < high - pivot:
+                stack.append((low, pivot))
+                stack.append((pivot + 1, high))
+            else:
+                stack.append((pivot + 1, high))
+                stack.append((low, pivot))
+
+    return arr
 
 # -------- Min Function -------- #
 def minFunc(Arr):
-    Arr = Arr.dropna(how='any',axis=0)
-    newArr = dropZero(newArr)
-    newArr = quick_sort(newArr, 0, len(newArr) - 1)
-    minimum = newArr[0]
+    #Arr = Arr.dropna(how='any',axis=0)
+    #newArr = dropZero(Arr)
+    #newArr = quick_sort(newArr, 0, len(newArr) - 1)
+    minimum = Arr[0]
     return minimum
 	
 # -------- Print Function -------- #
@@ -216,3 +245,95 @@ def printDataFrame(df):
         print(df.head(1000))
     elif (selected == 43):
         print(df.head(5000))
+
+
+# -------- Int Conversion Function -------- #
+def convertInt(Arr):
+    #newArr = Arr.values
+    newArr = []
+    for x in Arr:
+        #try:
+        y = int(x)
+        if (y < 0):
+            print("Negative number detected: " + str(y))
+        elif (y > 0):
+            newArr.append(y)
+        #except:
+        #    print("invalid: " + str(x))
+    
+    return list(newArr)
+
+
+# -------- Merge Sort Function -------- #
+# Notes:
+# 1) Make a function to divide all the arrays until the length of the array is 1, meaning fully divided
+# 2) Send our arrays into a "merge" helper which will sort the array, combine it into a bigger array,
+#    and it will keep doing that until everything is back as a whole
+# 3) O(n log n) because of how much space we're using making all these arrays 
+
+def merge_sort(arr):
+    # If the arr size is equal to one, we are finally done
+    if len(arr) == 1:
+        return arr
+
+    # Get the middle index of the current array
+    middle = int(len(arr) / 2)
+    # Slice the array in half
+    left = arr[:middle]
+    right = arr[middle:]
+
+    # Send the sliced array over to this again, we're gonna keep slicing
+    # This is gonna stop calling recursively once we reach base case of len(arr) == 1
+    left = merge_sort(left)
+    right = merge_sort(right)
+
+    # Start next recursive "merge" function
+    # Send over the arrays which will return the sorted array
+    return merge(left, right)
+
+
+def merge(left, right):
+    merged_arr = []
+    # These will be the indicies because we're working with TWO ARRAYS 
+    left_in = 0
+    right_in = 0
+
+    # one_pos is the first position of the first array
+    # two_pos is the first position of the second array
+    # compare element in first array with element in second array
+    #
+
+    # Keep iterating while the left array has elements or the right array has elements
+    while left_in < len(left) and right_in < len(right):
+        if left[left_in] <= right[right_in]:
+            # Place the smaller element in the earliest position possible in the array
+            merged_arr.append(left[left_in])
+            left_in += 1
+            # Jump to the top of the while look and check again if the left has an element less than right
+        #elif (right[right_in] <=left[left_in]):
+        # Implied already that the first element in the right index is the smallest in that array
+        # because we've been comparing the left array with everything in the right array
+        # so just append it
+        else: 
+            merged_arr.append(right[right_in])
+            right_in += 1
+
+    # Append any remaining elements
+    while left_in < len(left):
+        merged_arr.append(left[left_in])
+        left_in += 1
+    while right_in < len(right):
+        merged_arr.append(right[right_in])
+        right_in += 1
+
+    # Return the merged subarray 
+    return merged_arr
+
+
+
+
+
+
+
+
+

@@ -118,7 +118,10 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
                 #print("You selected drop all columns\n")
             elif (explore_opt == 23):
                 print("You selected describe all columns\n")
+                #try:
                 func.colStat(df)
+                #except:
+                #    print("No min/max for this column")
                 # test
             elif (explore_opt == 24):
                 print("You selected search element in all columns\n")
