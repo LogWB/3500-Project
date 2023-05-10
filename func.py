@@ -125,6 +125,9 @@ def colStat(df):
         #Used to test
         number = minFunc(sorted_arr)
         print("Minimum: " + str(number))
+
+        number = maxFunc(sorted_arr)
+        print("Maximum: " + str(number))
     else:
         # Mean Section
         print("Mean: NaN")
@@ -202,7 +205,8 @@ def printColumn(df):
     column_list = df[colName]
     #print(col_list)
 
-# ---------- checks if the input is valid ---------- #
+# ---------- Checks if the input is valid ---------- #
+# Note: 
 # The first parameter passed (num) is the maximum value aka the limit
 # The first is the minimum value 
 # The second should be the maximum value plus one because it will be subtracted by one when passed to prompt_verification
@@ -220,10 +224,12 @@ def checkValid(min_val, num, selected):
             valid = 0
     return selected
 
+# -------- Drop Zero Function -------- #
 def dropZero(array):
     array = [value for value in array if value != 0]
     return array
 
+# -------- Quicksort Function -------- #
 def partition(arr, low, high):
     pivot = len(arr[high])/2
     i = low - 1
@@ -270,7 +276,16 @@ def minFunc(Arr):
     #newArr = quick_sort(newArr, 0, len(newArr) - 1)
     minimum = Arr[0]
     return minimum
-	
+
+# -------- Max Function -------- #
+def maxFunc(Arr):
+    #Arr = Arr.dropna(how='any',axis=0)
+    #newArr = dropZero(Arr)
+    #newArr = quick_sort(newArr, 0, len(newArr) - 1)
+    size = len(Arr)
+    maximum = Arr[(size-1)]
+    return maximum
+
 # -------- Print Function -------- #
 def printDataFrame(df):
     print("\n(4) Select how many rows you would like to print:")
