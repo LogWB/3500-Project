@@ -138,12 +138,12 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
     except ValueError as e:
         print("ValueError:", e)
     except KeyboardInterrupt:
-        print("\nReturn to Main Menu")
+        print("\nCTRL+C or Cmd+C was pressed")
     except TypeError as e:
         print("A debug error has occured somewhere", e)
     except NameError:
         print("File has not been loaded yet")
     except FileNotFoundError:
         print("This file either does not exist or an unexpected error has occured")
-
-
+    finally:
+        print("Returning to main menu: ")
