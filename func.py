@@ -77,31 +77,75 @@ def colStat(df):
     number = countFunc(newArr)
     print("Count: " + str(number))
     
-    number = unCountFunc(newArr)
-    print("Unique: " + str(number))
+    unumber = unCountFunc(newArr)
+    print("Unique: " + str(unumber))
     
-    # Mean Section
-    mean = getMean(df, colName)
-    print("Mean: " + str(mean))
+    error = 0
     
-    # Variance Section using mean
-    vari = varianceFunc(lambda x: x > 0, newArr, mean)
-    print("Variance: " + str(vari))
+    try:
+        convertedArr = convertInt(newArr) 
+        
+        #print(newArr)
+        sorted_arr = merge_sort(convertedArr)
+    except:
+        error = 1
     
-    # Standard Deviation from Variance
-    stddev = vari**0.5
-    print("Standard Deviation: " + str(stddev))
-    
-    convertedArr = convertInt(newArr) 
-    
-    #print(newArr)
-    sorted_arr = merge_sort(convertedArr)
-    #print(newArr)
-    #print(sorted_arr)
-    #print("According to this: " + str(newArr[len(newArr)-1]))
-    #Used to test
-    number = minFunc(sorted_arr)
-    print("Minimum: " + str(number))
+    if (error == 0):
+        # Mean Section
+        mean = getMean(df, colName)
+        print("Mean: " + str(mean))
+        
+        # Median Section
+        if (number % 2 == 1):
+            # If odd, print the middle
+            try:
+                median = MedFunc(sorted_arr, int((number+1)/2))
+                print("Median: " + str(median))
+            except:
+                print("2nd variable is not an int value")
+        else:
+            # If even, print the lower value
+            try:
+                median = MedFunc(sorted_arr, int(number/2))
+                print("Median: " + str(median))
+            except:
+                print("2nd variable is not an int value")
+        
+        # Variance Section using mean
+        vari = varianceFunc(lambda x: x > 0, newArr, mean)
+        print("Variance: " + str(vari))
+        
+        # Standard Deviation from Variance
+        stddev = vari**0.5
+        print("Standard Deviation: " + str(stddev))
+        
+        #print(newArr)
+        #print(sorted_arr)
+        #print("According to this: " + str(newArr[len(newArr)-1]))
+        #Used to test
+        number = minFunc(sorted_arr)
+        print("Minimum: " + str(number))
+    else:
+        # Mean Section
+        print("Mean: NaN")
+        
+        # Median Section
+        print("Median: NaN")
+        
+        # Mode
+        print("Mode: NaN")
+        
+        # Variance
+        print("Variance: NaN")
+        
+        # Standard Deviation
+        print("Standard Deviation: NaN")
+        
+        # Minimum
+        print("Minimum: NaN")
+        
+        # Maximum
+        print("Maximum: NaN")
 
 # ---------- Count Function ---------- #
 def countFunc(newArr):
@@ -124,6 +168,10 @@ def unCountFunc(Arr):
             counter += 1
     return counter
 
+# ---------- Median Function ---------- #
+def MedFunc(Arr, middle):
+    median = Arr[middle]
+    return median
 
 # ---------- Variance Function ---------- #
 def varianceFunc(func, Arr, mean):
@@ -255,7 +303,8 @@ def convertInt(Arr):
         #try:
         y = int(x)
         if (y < 0):
-            print("Negative number detected: " + str(y))
+            # print("Negative number detected: " + str(y))
+            pass
         elif (y > 0):
             newArr.append(y)
         #except:
@@ -328,12 +377,3 @@ def merge(left, right):
 
     # Return the merged subarray 
     return merged_arr
-
-
-
-
-
-
-
-
-
