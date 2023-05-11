@@ -111,6 +111,10 @@ def colStat(df):
             except:
                 print("2nd variable is not an int value")
         
+        # Mode Function
+        modeval = modeFunc(sorted_arr)
+        print("Mode: " + str(modeval[0]))
+        
         # Variance Section using mean
         vari = varianceFunc(lambda x: x > 0, newArr, mean)
         print("Variance: " + str(vari))
@@ -175,6 +179,17 @@ def unCountFunc(Arr):
 def MedFunc(Arr, middle):
     median = Arr[middle]
     return median
+
+# -------- Max Function -------- #
+def modeFunc(Arr):
+    mode = {}
+    
+    for items in Arr:
+        for items in mode:
+            mode[items] += 1
+        else:
+            mode[items] = 1
+    return [key for key in mode.keys() if mode[key] == max(mode.values())]
 
 # ---------- Variance Function ---------- #
 def varianceFunc(func, Arr, mean):
