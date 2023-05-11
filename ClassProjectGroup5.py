@@ -8,6 +8,7 @@
 # Description: Implementation Basic Data Analysis Routines
 import pandas as pd
 import time 
+import re 
 import func as func
 df_loaded = 0 # Flag for if we have loaded a csv into a dataframe
 
@@ -417,6 +418,92 @@ def merge(left, right):
     # Return the merged subarray 
     return merged_arr
 
+# -------- Search Function -------- #
+# Using to check column contents and also stores it in an array
+def searchFunction(df):
+    num_col = listColumns(df)
+    selected_col = 0
+    print("Selected a column to search in: ")
+    selected_col = checkValid(1, num_col, selected_col)
+    #print("SELECTED_COL = " + selected_col)
+    array = df.columns
+    colName = array[int(selected_col)-1]
+    #print("You selected: " + colName)
+    # \/ This will print it as a column \/
+    #print(df[colName].to_string(index=False))
+    column_list = list(df[colName].values)
+    #print(column_list)
+    date_query = re.match("(?i)^date", colName)
+    if (date_query): 
+        print("IMPORTANT: Please enter with the format of: mm/dd/yyyy")
+    else: 
+        pass
+
+    while True:
+        print("Enter a value to search for: ") 
+        element = input("Select: ")
+        # If the user wants to look for a date...
+        if (date_query):
+            valid_date = re.match("^\d{2}/\d{2}/\d{4}$", element) 
+            # Format is valid, get out of this loop
+            if (valid_date):
+                break
+            # Format is invalid, get out of this loop
+            else:
+                print("Invalid date format. Please try again, or press Ctrl+C to exit")
+                pass
+        # Not a date query, break out of this loop
+        else:
+            break
+    #print("You selected: " + element)
+    i = 0
+    count = 0
+    j = 0
+    index_found = []
+
+    start_time = time.time()
+    for x in column_list:
+        # If the person is searching for a date
+        if(date_query):
+            # Dataframe had the format of mm/dd/yyyy 12:00:00AM. Need to cut off the time at the end.
+            # .split will cut off the string from the whitespace
+            temp = str(column_list[i]).split()
+            dataframe_element = temp[0]
+        else:
+            dataframe_element = str(column_list[i])
+        #print("Comparing: " + str(dataframe_element)) 
+        if (str(element) == dataframe_element):
+            #print("Found it: " + str(x) + " and " + str(column_list[i]))
+            index_found.append(i)
+            # Keep track of how many elements found with count
+            count = count + 1
+            # Use `i` to march the index forward
+            i = i + 1
+        else:
+            i = i + 1
+    end_time = time.time()
+    total_time = (end_time) - (start_time)
+    total_time = round(total_time, 5)
+
+    print("Element found in " + str(count) + " row(s)")
+    print("Search was successful! Time to search was " + str(total_time) + " sec.")
+    # Only offer user the option to print rows if the amount of found elements is more than one 
+    if (count > 0):
+        print("Would you like to print the rows that match this search element?")
+        print("Please note, this will print a lot of elements take some time. If you would like to cancel at any time, please press CTRL+C")
+        answer = input("[Y/N]: ")
+        if((answer =="Y") or (answer == "y") or (answer == "yes") or (answer == "Yes") or (answer == "YES")):
+            #print(index_found)
+            # While our index `j` is less than the amount of elements we found, increment through the array 
+            while j < (count):
+                print(df.loc[[index_found[j]]])
+                j = j + 1
+        if((answer =="N") or (answer == "n") or (answer == "no") or (answer == "No") or (answer == "NO")):
+            pass
+        else:
+            print("Invalid option, returning to main menu")
+
+# -------------------------------------------------------------------------#
 
 main_menu = "Main Menu:" 
 main_menu += "\n**********"
@@ -531,7 +618,8 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
                 #    print("No min/max for this column")
                 # test
             elif (explore_opt == 24):
-                print("You selected search element in all columns\n")
+                searchFunction(df)
+                #print("You selected search element in all columns\n")
             elif (explore_opt == 25):
                 print("You selected back to main menu\n")
         if (option == 3):
