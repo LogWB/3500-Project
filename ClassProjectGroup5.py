@@ -11,6 +11,7 @@ import time
 import re 
 import func as func
 df_loaded = 0 # Flag for if we have loaded a csv into a dataframe
+string_value = 0 # Flag for if we are dealing with a string, used in sorting algorithm
 
 # class func: - Messes up exploring the data
 # ---------- Function to help verify input ---------- # 
@@ -60,7 +61,9 @@ def dropColumn(df):
 # ---------- Mean Function ---------- 
 def getMean(df, colName):
     column_list = df[colName]
-    size = countFunc(df[colName])
+    column_list = column_list.dropna(how='any',axis=0)
+    #size = countFunc(df[colName])
+    size = countFunc(column_list)
     list(column_list)
     summation = 0
     for x in column_list:
@@ -75,6 +78,8 @@ def getMean(df, colName):
 
 # ---------- Column Stats ---------- #
 def colStat(df):
+    global string_value
+    string_value = 0
     print("\n(23) Describe Columns:")
     print("\n**********")
     print("\nSelect a column number from the list:")
@@ -95,77 +100,87 @@ def colStat(df):
     
     error = 0
     
+    newArr = newArr.dropna(how='any',axis=0)
     try:
         convertedArr = convertInt(newArr) 
-        
         #print(newArr)
         sorted_arr = merge_sort(convertedArr)
     except:
+        #print("string detected")
+        string_value = 1
         error = 1
-    
-    if (error == 0):
-        # Mean Section
-        mean = getMean(df, colName)
-        print("Mean: " + str(mean))
-        
-        # Median Section
-        if (number % 2 == 1):
-            # If odd, print the middle
-            try:
-                median = MedFunc(sorted_arr, int((number+1)/2))
-                print("Median: " + str(median))
-            except:
-                print("2nd variable is not an int value")
-        else:
-            # If even, print the lower value
-            try:
-                median = MedFunc(sorted_arr, int(number/2))
-                print("Median: " + str(median))
-            except:
-                print("2nd variable is not an int value")
-                
-        modeval = modeFunc(sorted_arr)
-        print("Mode: " + str(modeval[0]))
-        
-        # Variance Section using mean
-        vari = varianceFunc(lambda x: x > 0, newArr, mean)
-        print("Variance: " + str(vari))
-        
-        # Standard Deviation from Variance
-        stddev = vari**0.5
-        print("Standard Deviation: " + str(stddev))
-        
-        #print(newArr)
+        sorted_arr = merge_sort(list(newArr))
+    finally:
+        if (colName == "LON"):
+            error = 0
         #print(sorted_arr)
-        #print("According to this: " + str(newArr[len(newArr)-1]))
-        #Used to test
-        number = minFunc(sorted_arr)
-        print("Minimum: " + str(number))
+        if (error == 0):
+            # Mean Section
+            mean = getMean(df, colName)
+            print("Mean: " + str(mean))
         
-        number = maxFunc(sorted_arr)
-        print("Maximum: " + str(number))
+            # Median Section
+            if (number % 2 == 1):
+                # If odd, print the middle
+                try:
+                    median = MedFunc(sorted_arr, int((number+1)/2))
+                    print("Median: " + str(median))
+                except:
+                    print("2nd variable is not an int value")
+            else:
+                # If even, print the lower value
+                try:
+                    median = MedFunc(sorted_arr, int(number/2))
+                    print("Median: " + str(median))
+                except:
+                    print("2nd variable is not an int value")
+                
+            modeval = modeFunc(sorted_arr)
+            print("Mode: " + str(modeval[0]))
         
-    else:
-        # Mean Section
-        print("Mean: NaN")
+            # Variance Section using mean
+            try:
+                vari = varianceFunc(lambda x: x > 0, newArr, mean)
+                print("Variance: " + str(vari))
+                stddev = vari**0.5
+                print("Standard Deviation: " + str(stddev))
+            except:
+                print("Variance: NaN")
+                print("Standard Deviation: NaN")
+            
+            # Standard Deviation from Variance
         
-        # Median Section
-        print("Median: NaN")
+            #print(newArr)
+            #print(sorted_arr)
+            #print("According to this: " + str(newArr[len(newArr)-1]))
+            #Used to test
+            number = minFunc(sorted_arr)
+            print("Minimum: " + str(number))
         
-        # Mode
-        print("Mode: NaN")
+            number = maxFunc(sorted_arr)
+            print("Maximum: " + str(number))
         
-        # Variance
-        print("Variance: NaN")
+        else:
+            # Mean Section
+            print("Mean: NaN")
         
-        # Standard Deviation
-        print("Standard Deviation: NaN")
+            # Median Section
+            print("Median: NaN")
         
-        # Minimum
-        print("Minimum: NaN")
+            # Mode
+            print("Mode: NaN")
         
-        # Maximum
-        print("Maximum: NaN")
+            # Variance
+            print("Variance: NaN")
+        
+            # Standard Deviation
+            print("Standard Deviation: NaN")
+        
+            # Minimum
+            print("Minimum: NaN")
+        
+            # Maximum
+            print("Maximum: NaN")
 
 # ---------- Count Function ---------- #
 def countFunc(newArr):
@@ -390,13 +405,21 @@ def merge(left, right):
     # one_pos is the first position of the first array
     # two_pos is the first position of the second array
     # compare element in first array with element in second array
-    #
 
+    
     # Keep iterating while the left array has elements or the right array has elements
     while left_in < len(left) and right_in < len(right):
-        if left[left_in] <= right[right_in]:
+        
+        if (string_value == 1): 
+            left_val = str(left[left_in]) 
+            right_val = str(right[right_in])
+        else:
+            left_val = left[left_in] 
+            right_val = right[right_in]
+
+        if left_val < right_val:
             # Place the smaller element in the earliest position possible in the array
-            merged_arr.append(left[left_in])
+            merged_arr.append(left_val)
             left_in += 1
             # Jump to the top of the while look and check again if the left has an element less than right
         #elif (right[right_in] <=left[left_in]):
@@ -404,15 +427,25 @@ def merge(left, right):
         # because we've been comparing the left array with everything in the right array
         # so just append it
         else: 
-            merged_arr.append(right[right_in])
+            merged_arr.append(right_val)
             right_in += 1
 
     # Append any remaining elements
     while left_in < len(left):
-        merged_arr.append(left[left_in])
+        if string_value == 1:
+            left_val = str(left[left_in]) 
+        else:
+            left_val = left[left_in] 
+            
+        merged_arr.append(left_val)
         left_in += 1
     while right_in < len(right):
-        merged_arr.append(right[right_in])
+        if string_value == 1: 
+            right_val = str(right[right_in])
+        else:
+            right_val = right[right_in] 
+
+        merged_arr.append(right_val)
         right_in += 1
 
     # Return the merged subarray 
