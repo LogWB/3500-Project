@@ -206,7 +206,7 @@ def printAnalysis(df):
     print("\nTop 10 most common crime types:")
     loopcount = 1
     for x in top_10:
-        print(getTime() + str(loopcount) + " " + str(x[0]))
+        print(getTime() + " " + str(loopcount) + " " + str(x[0]))
         loopcount += 1
     
     
@@ -287,7 +287,7 @@ def printAnalysis(df):
 
     # -------- Start of Question 10 -------- #
     print("\n")
-    print(getTime() + " What is the month that has the most major credit card frauds in LA in 2019?")
+    print(getTime() + " List the top 5 more dangerous areas for older man (age from 65 and more) in december of 2018.")
     print("---------------------------------------------")
     question10(df)
 
