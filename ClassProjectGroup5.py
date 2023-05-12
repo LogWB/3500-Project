@@ -12,8 +12,48 @@ import re
 import func as func
 df_loaded = 0 # Flag for if we have loaded a csv into a dataframe
 string_value = 0 # Flag for if we are dealing with a string, used in sorting algorithm
-
+unique_year_list = [] 
+unique_crime_list = [] 
 # class func: - Messes up exploring the data
+
+# ---------- Analysis ---------- # 
+def printAnalysis(df):
+    # ----- Start of work for question 1 ----- #
+    global unique_year_list
+    newArr = df["year"]
+    unCountFunc(newArr, "year")
+    #print(unique_item_list)
+    i = 0
+    unique_year_list = merge_sort(unique_year_list)
+    num_years = len(unique_year_list)
+    index_array = []
+    #print(unique_year_list)
+    year_to_crime = [] 
+    while i < num_years:
+        year_to_crime.append(unCrimePerYear(unique_year_list[i], df))
+        i =  i + 1
+    i = 0
+    while i < num_years:
+        print("The amount of unique crimes in the year " + str(unique_year_list[i]) + " is: " + str(year_to_crime[i])) 
+        i = i + 1
+
+
+
+def unCrimePerYear(element, df):
+    count = 0
+    i = 0
+    j = 0
+    index_found = []
+    count = 0
+    
+    # get the dataframe where it's only that year
+    df = df[df.year == element]
+    newArr = df["Crm Cd Desc"]
+    
+    # get the count of unique crimes
+    count =  unCountFunc(newArr, " ")
+    return count
+
 # ---------- Function to help verify input ---------- # 
 def prompt_verification(select, _min, _max) :
     if (select): # Verify that something was input
@@ -95,7 +135,7 @@ def colStat(df):
     number = countFunc(newArr)
     print("Count: " + str(number))
     
-    unumber = unCountFunc(newArr)
+    unumber = unCountFunc(newArr, "")
     print("Unique: " + str(unumber))
     
     error = 0
@@ -106,7 +146,7 @@ def colStat(df):
         #print(newArr)
         sorted_arr = merge_sort(convertedArr)
     except:
-        #print("string detected")
+        #print("non-numerical detected")
         string_value = 1
         error = 1
         sorted_arr = merge_sort(list(newArr))
@@ -193,7 +233,8 @@ def countFunc(newArr):
     return counter
 
 # ---------- Unique Count Function ---------- #
-def unCountFunc(Arr):
+def unCountFunc(Arr, colName):
+    global unique_year_list
     Arr = Arr.dropna(how='any',axis=0)
     newArr = Arr.drop_duplicates()
     newArr = dropZero(newArr)
@@ -201,6 +242,10 @@ def unCountFunc(Arr):
     for item in newArr:
         if item:
             counter += 1
+            if (colName == "year"):
+                unique_year_list.append(item)
+            if (colName == "crime"):
+                unique_crime_list.append(item)
     return counter
 
 # ---------- Median Function ---------- #
@@ -656,21 +701,21 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
             elif (explore_opt == 25):
                 print("You selected back to main menu\n")
         if (option == 3):
-                print("[PLACEHOLDER] Data has been analzyed [PLACEHOLDER]\n")
+                printAnalysis(df)
         if (option == 4):
             if(df_loaded==1):
                 printDataFrame(df)
             else:
                 print("No dataframe has been loaded\n")
     # Error Handling
-    except ValueError as e:
-        print("ValueError:", e)
+    #except ValueError as e:
+    #    print("ValueError:", e)
     except KeyboardInterrupt:
         print("\nCTRL+C or Cmd+C was pressed")
     except TypeError as e:
         print("A debug error has occured somewhere", e)
-    except NameError:
-        print("File has not been loaded yet")
+    #except NameError:
+    #    print("File has not been loaded yet")
     except FileNotFoundError:
         print("This file either does not exist or an unexpected error has occured")
     finally:
