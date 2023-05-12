@@ -303,7 +303,7 @@ def question1(element, df):
     
     # get the dataframe where it's only that year
     df = df[df.year == element]
-    newArr = df["Crm Cd Desc"]
+    newArr = df["DR_NO"]
     
     # get the count of unique crimes
     count =  unCountFunc(newArr, " ")
@@ -325,7 +325,7 @@ def question3(element, df):
     
     # get the dataframe where it's only that location
     df = df[df["DATE OCC"].str.match(element)]
-    newArr = df["Crm Cd Desc"]
+    newArr = df["DR_NO"]
     
     count =  unCountFunc(newArr, " ")
     return count
