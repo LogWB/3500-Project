@@ -10,6 +10,7 @@ import pandas as pd
 import time 
 import re 
 import func as func
+from collections import Counter
 df_loaded = 0 # Flag for if we have loaded a csv into a dataframe
 string_value = 0 # Flag for if we are dealing with a string, used in sorting algorithm
 unique_year_list = [] 
