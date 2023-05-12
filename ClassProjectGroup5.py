@@ -101,10 +101,10 @@ def printAnalysis(df):
         print("The amount of unique crimes in the month " + month[i] + " is: " + str(date_to_crime[i])) 
         i = i + 1
     
-    def convertDF(lists, names):
-        df = pd.DataFrame(lists)
-        df_s = df.sort_values(names, ascending = False)
-        return df_s
+def convertDF(lists, names):
+    df = pd.DataFrame(lists)
+    df_s = df.sort_values(names, ascending = False)
+    return df_s
 
 # ----- All months and the unique total count of crimes per month ----- #
 def unCrimePerMonth(element, df):
