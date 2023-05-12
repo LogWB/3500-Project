@@ -1043,6 +1043,8 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
         print("File has not been loaded yet")
     except FileNotFoundError:
         print("This file either does not exist or an unexpected error has occured")
+    except Exception as e: # General Exception
+        print(e)
     finally:
         print(" ")
         
