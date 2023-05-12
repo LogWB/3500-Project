@@ -11,6 +11,7 @@ import time
 import re 
 import func as func
 from collections import Counter
+
 df_loaded = 0 # Flag for if we have loaded a csv into a dataframe
 string_value = 0 # Flag for if we are dealing with a string, used in sorting algorithm
 unique_year_list = [] 
@@ -21,7 +22,7 @@ unique_month_list = []
 
 # ---------- Analysis ---------- # 
 def printAnalysis(df):
-    # ----- Start of work for question 1 ----- #
+    
     global unique_year_list
     global unique_location_list
     unique_year_list = [] 
@@ -29,20 +30,16 @@ def printAnalysis(df):
     unique_location_list = [] 
     unique_month_list = []
 
+    
+    # ----- Start of work for question 1 ----- #
+    print("\n")
+    print(getTime() + " Show the total unique count of crimes per year sorted in descending order: ") 
+    print("---------------------------------------------")
     year_df = df["year"]
-    location_df = df["AREA NAME"]
     unCountFunc(year_df, "year")
-    unCountFunc(location_df, "AREA NAME")
-    
     unique_year_list = merge_sort(unique_year_list)
-    unique_location_list = merge_sort(unique_location_list)
-    
     num_years = len(unique_year_list)
-    num_location = len(unique_location_list)
-    index_array = []
     year_to_crime = [] 
-    location_to_crime = [] 
-    
     i = 0
     while i < num_years:
         #year_to_crime.append(unCrimePerYear(unique_year_list[i], df))
@@ -55,22 +52,32 @@ def printAnalysis(df):
     df_tests = convertDF(lists, 'counts')
     
     i = 0
-    print("\n")
-    print(getTime() + " Show the total unique count of crimes per year sorted in descending order: ") 
-    print("---------------------------------------------")
     while i < num_years:
         print(getTime() + " The amount of unique crimes in the year " 
                 + str(df_tests.year.iloc[i]) + " is: " + str(df_tests.counts.iloc[i])) 
         i = i + 1
     print("\n")
+    
+
+
+
+
     # ----- Start of work for question 2 ----- #
-    i = 0
     print(getTime() + " Show the top 5 areas (AREA NAME) with the most crime events in " +  
             "all years (Sorted by the # of crime events)")
     print("---------------------------------------------")
+    location_df = df["AREA NAME"]
+    unCountFunc(location_df, "AREA NAME")
+    
+    unique_location_list = merge_sort(unique_location_list)
+    
+    num_location = len(unique_location_list)
+    location_to_crime = [] 
+    i = 0
     while i < num_location:
         #print('Checking location to crime with: ' + unique_location_list[i]) 
-        location_to_crime.append(unCrimePerLocation(unique_location_list[i], df))
+        #location_to_crime.append(unCrimePerLocation(unique_location_list[i], df))
+        location_to_crime.append(question2(unique_location_list[i], df))
         #print(location_to_crime)
         i =  i + 1
     # make a dataframe in another function
@@ -80,8 +87,11 @@ def printAnalysis(df):
     while i < 5:
         print(getTime() + " The amount of unique crimes in the area " + str(df_tests.location.iloc[i]) + " is: " + str(df_tests.counts.iloc[i])) 
         i = i + 1
-
     
+
+
+
+
     # ---------- Start of question 3 ---------- #
     print("\n")
     print(getTime() + " Show all the months and the unique total count of crimes sorted in increasing order")
@@ -115,6 +125,10 @@ def printAnalysis(df):
         print(getTime() + " The amount of unique crimes in the month " + 
                 df_tests.month.iloc[i] + " is: " + str(df_tests.counts.iloc[i])) 
         i = i - 1
+    
+
+
+
 
     # ---------- Start of question 4 ---------- #
     print("\n")
@@ -138,13 +152,22 @@ def printAnalysis(df):
     top_10 = list(top_10)
     for x in top_10:
         print(getTime() + " " + str(x).strip())
+    
+
+
+
 
     # ---------- Start of question 5 ---------- #
     print("\n")
     print(getTime() + " Show the top 5 most dangerous times (in hours) to be in Hollywood" + 
             ". Also display the total amount of crimes in each hour.")
     print("---------------------------------------------")
-    CrimeInArea("Hollywood", df)
+    #CrimeInArea("Hollywood", df)
+    question5("Hollywood", df)
+
+    
+
+
 
     # ---------- Start of question 6 ---------- #
     print("\n")
@@ -171,6 +194,10 @@ def printAnalysis(df):
     searchval = df_tests.DRNO[0]
     print(df[df['DR_NO'] == searchval])
    
+    
+
+
+
     # -------- Start of Question 7 -------- #
     print("\n")
     print(getTime() + " Show the 10 top most common crime types (Crm Cd Desc) overall across all years.")
@@ -186,6 +213,10 @@ def printAnalysis(df):
         print(getTime() + str(loopcount) + " " + str(x[0]))
         loopcount += 1
     
+    
+
+
+
     # -------- Start of Question 8 -------- #
     print("\n")
     print(getTime() + " Are women or men more likely to be victim of a crime in LA betwene lunch" + 
@@ -216,6 +247,10 @@ def printAnalysis(df):
     print(getTime() + "Compared to: " + str(min(male,female)))
     print(getTime() + "Displacement: " + str(abs(male - female)))
     
+    
+
+
+
     # -------- Start of Question 9 -------- #
     print("\n")
     print(getTime() + " What is the month that has the most major credit card frauds in LA in 2019?")
@@ -236,7 +271,8 @@ def printAnalysis(df):
     regex_pattern.append("12/\d{2}/2019.")
     card_crime = []
     while i < 12:
-        card_crime.append(CardCrimePerMonth(regex_pattern[i], df))
+        #card_crime.append(CardCrimePerMonth(regex_pattern[i], df))
+        card_crime.append(question9(regex_pattern[i], df))
         i = i + 1
     i = 0
     while i < 12:
@@ -244,11 +280,16 @@ def printAnalysis(df):
                 + " is: " + str(card_crime[i]))
         i = i + 1
     
+    
+
+
+
     # -------- Start of Question 10 -------- #
     print("\n")
     print(getTime() + " What is the month that has the most major credit card frauds in LA in 2019?")
     print("---------------------------------------------")
     question10(df)
+
 
 # ------ Creates a dataframe and returns it ------ #
 def convertDF(lists, names):
@@ -256,7 +297,82 @@ def convertDF(lists, names):
     df_s = df.sort_values(names, ascending = False)
     return df_s
 
-def CardCrimePerMonth(element, df):
+# ----- Function to check the unqiue crimes per year ----- # 
+def question1(element, df):
+    count = 0
+    
+    # get the dataframe where it's only that year
+    df = df[df.year == element]
+    newArr = df["Crm Cd Desc"]
+    
+    # get the count of unique crimes
+    count =  unCountFunc(newArr, " ")
+    return count
+
+# ----- Top 5 areas w/ most crime events per year ----- #
+def question2(element, df):
+    count = 0
+    
+    # get the dataframe where it's only that location
+    df = df[df["AREA NAME"] == element]
+    newArr = df["Crm Cd Desc"]
+    #print(df)
+    #print(newArr)
+    
+    # get the count of unique crimes
+    count =  unCountFunc(newArr, " ")
+    return count
+
+# ----- All months and the unique total count of crimes per month ----- #
+def question3(element, df):
+    count = 0
+    
+    # get the dataframe where it's only that location
+    df = df[df["DATE OCC"].str.match(element)]
+    #print(df)
+    newArr = df["Crm Cd Desc"]
+    #print(df)
+    #print(newArr)
+    
+    # get the count of unique crimes
+    count =  unCountFunc(newArr, " ")
+    return count
+
+def question5(element, df):
+    count = 0
+
+    # get the dataframe where it's only that location
+    df = df[df["AREA NAME"] == element]
+    newArr = df["TIME OCC"]
+    unique_time = unCountFunc(newArr, " " )
+    #print(newArr)
+    sorted_arr = merge_sort(list(newArr))
+    time = []
+    occurence = []
+    i = 0
+    j = 0
+    counter = 0
+    while j < unique_time and i < len(sorted_arr):
+        counter = 0
+        x = sorted_arr[i]
+        while i < len(sorted_arr) and sorted_arr[i] == x:
+            counter = counter + 1
+            i = i + 1
+
+        time.append(sorted_arr[i-1])
+        occurence.append(counter)
+        j = j + 1
+
+    lists = {'time' : time, 'occurence': occurence}
+    df = pd.DataFrame(lists)
+    df = df.sort_values(by=["occurence"], ascending=False)
+
+    print(getTime()) 
+    print(df.head(5).to_string(index=False))
+    #print(df_tests)
+
+
+def question9(element, df):
     newdf = df[df["DATE OCC"].str.contains(element, regex=True)]
     #print(df)
     crimedesc = "CREDIT CARDS, FRAUD USE ($950 & UNDER"
@@ -295,85 +411,15 @@ def question10(df):
     print(getTime())
     print(df.head(5).to_string(index=False))
 
-def CrimeInArea(element, df):
-    count = 0
-
-    # get the dataframe where it's only that location
-    df = df[df["AREA NAME"] == element]
-    newArr = df["TIME OCC"]
-    unique_time = unCountFunc(newArr, " " )
-    #print(newArr)
-    sorted_arr = merge_sort(list(newArr))
-    time = []
-    occurence = []
-    i = 0
-    j = 0
-    counter = 0
-    while j < unique_time and i < len(sorted_arr):
-        counter = 0
-        x = sorted_arr[i]
-        while i < len(sorted_arr) and sorted_arr[i] == x:
-            counter = counter + 1
-            i = i + 1
-
-        time.append(sorted_arr[i-1])
-        occurence.append(counter)
-        j = j + 1
-
-    lists = {'time' : time, 'occurence': occurence}
-    df = pd.DataFrame(lists)
-    df = df.sort_values(by=["occurence"], ascending=False)
-
-    print(getTime()) 
-    print(df.head(5).to_string(index=False))
-    #print(df_tests)
 
 
 
 
 
-# ----- All months and the unique total count of crimes per month ----- #
-def question3(element, df):
-    count = 0
-    
-    # get the dataframe where it's only that location
-    df = df[df["DATE OCC"].str.match(element)]
-    #print(df)
-    newArr = df["Crm Cd Desc"]
-    #print(df)
-    #print(newArr)
-    
-    # get the count of unique crimes
-    count =  unCountFunc(newArr, " ")
-    return count
-
-# ----- Top 5 areas w/ most crime events per year ----- #
-def unCrimePerLocation(element, df):
-    count = 0
-    
-    # get the dataframe where it's only that location
-    df = df[df["AREA NAME"] == element]
-    newArr = df["Crm Cd Desc"]
-    #print(df)
-    #print(newArr)
-    
-    # get the count of unique crimes
-    count =  unCountFunc(newArr, " ")
-    return count
 
 
 
-# ----- Function to check the unqiue crimes per year ----- # 
-def question1(element, df):
-    count = 0
-    
-    # get the dataframe where it's only that year
-    df = df[df.year == element]
-    newArr = df["Crm Cd Desc"]
-    
-    # get the count of unique crimes
-    count =  unCountFunc(newArr, " ")
-    return count
+
 
 # ---------- Function to help verify input ---------- # 
 def prompt_verification(select, _min, _max) :
@@ -417,6 +463,9 @@ def dropColumn(df):
 
     colName = array[int(selected_col)-1]
     newDf = df.drop(colName, axis=1)
+    num_col = num_col - 1
+    if (num_col == 0):
+        df_loaded = 0
     return newDf
 
 # ---------- Mean Function ---------- 
@@ -704,6 +753,7 @@ def printDataFrame(df):
     print("41) 100 Rows ")
     print("42) 1000 Rows ")
     print("43) 5000 Rows ")
+    row_count = len(df)
     selected = 0 # Temporary, will be changed
     
     selected = checkValid(41, 44, selected)
@@ -712,14 +762,22 @@ def printDataFrame(df):
     pd.set_option('display.max_rows', None)
     pd.set_option('display.max_columns', None)
     pd.set_option('display.width', 200)
-
+   
     if (selected == 41):
-        print(df.head(100))
+        if (row_count >= 100):
+            print(df.head(100))
+        else:
+            print("Cannot print this amount of elements, dataframe too small")
     elif (selected == 42):
-        print(df.head(1000))
+        if (row_count >= 1000):
+            print(df.head(1000))
+        else:
+            print("Cannot print this amount of elements, dataframe too small")
     elif (selected == 43):
-        print(df.head(5000))
-
+        if (row_count >= 5000):
+            print(df.head(5000))
+        else:
+            print("Cannot print this amount of elements, dataframe too small")
 
 # -------- Int Conversion Function -------- #
 def convertInt(Arr):
@@ -891,21 +949,25 @@ def searchFunction(df):
 
     print("Element found in " + str(count) + " row(s)")
     print("Search was successful! Time to search was " + str(total_time) + " sec.")
+    
+    # Note: The below code was mostly juts used for making sure the search was indeed correct.
+    # Since it is unnecessary for the project, it is commented out
+
     # Only offer user the option to print rows if the amount of found elements is more than one 
-    if (count > 0):
-        print("Would you like to print the rows that match this search element?")
-        print("Please note, this will print a lot of elements take some time. If you would like to cancel at any time, please press CTRL+C")
-        answer = input("[Y/N]: ")
-        if((answer =="Y") or (answer == "y") or (answer == "yes") or (answer == "Yes") or (answer == "YES")):
-            #print(index_found)
-            # While our index `j` is less than the amount of elements we found, increment through the array 
-            while j < (count):
-                print(df.loc[[index_found[j]]])
-                j = j + 1
-        if((answer =="N") or (answer == "n") or (answer == "no") or (answer == "No") or (answer == "NO")):
-            pass
-        else:
-            print("Invalid option, returning to main menu")
+    #if (count > 0):
+    #    print("Would you like to print the rows that match this search element?")
+    #    print("Please note, this will print a lot of elements take some time. If you would like to cancel at any time, please press CTRL+C")
+    #    answer = input("[Y/N]: ")
+    #    if((answer =="Y") or (answer == "y") or (answer == "yes") or (answer == "Yes") or (answer == "YES")):
+    #        #print(index_found)
+    #        # While our index `j` is less than the amount of elements we found, increment through the array 
+    #        while j < (count):
+    #            print(df.loc[[index_found[j]]])
+    #            j = j + 1
+    #    if((answer =="N") or (answer == "n") or (answer == "no") or (answer == "No") or (answer == "NO")):
+    #        pass
+    #    else:
+    #        print("Invalid option, returning to main menu")
 
 # -------------------------------------------------------------------------#
 
@@ -1013,38 +1075,48 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
                 listColumns(df)
             elif (explore_opt == 22): 
                 #using this as a test
-                df = dropColumn(df)
-                #print("You selected drop all columns\n")
+                if df.empty: 
+                    print("No columns to drop")
+                else: 
+                    df = dropColumn(df)
             elif (explore_opt == 23):
                 print("You selected describe all columns\n")
                 #try:
-                colStat(df)
+                if df.empty:
+                    print("Dataframe is empty")
+                else:
+                    colStat(df)
                 #except:
                 #    print("No min/max for this column")
                 # test
             elif (explore_opt == 24):
-                searchFunction(df)
+                if df.empty:
+                    print("No columns to search")
+                else: 
+                    searchFunction(df)
                 #print("You selected search element in all columns\n")
             elif (explore_opt == 25):
                 print("You selected back to main menu\n")
         if (option == 3):
                 printAnalysis(df2)
         if (option == 4):
-            if(df_loaded==1):
+            if df.empty:
+                print("Dataframe is empty")
+            elif(df_loaded==1):
                 printDataFrame(df)
             else:
                 print("No dataframe has been loaded\n")
     # Error Handling
-    #except ValueError as e:
-    #    print("ValueError:", e)
-    #except KeyboardInterrupt:
-    #    print("\nCTRL+C or Cmd+C was pressed")
-    #except TypeError as e:
-    #    print("A debug error has occured somewhere", e)
-    #except NameError:
-    #    print("File has not been loaded yet")
+    except ValueError as e:
+        print("ValueError:", e)
+    except KeyboardInterrupt:
+        print("\nCTRL+C or Cmd+C was pressed")
+    except TypeError as e:
+        print("A debug error has occured somewhere", e)
+    except NameError:
+        print("File has not been loaded yet")
     except FileNotFoundError:
         print("This file either does not exist or an unexpected error has occured")
     finally:
-        print("Returning to main menu: ")
+        print(" ")
         
