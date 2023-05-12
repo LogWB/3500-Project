@@ -37,8 +37,6 @@ def printAnalysis(df):
     unique_year_list = merge_sort(unique_year_list)
     unique_location_list = merge_sort(unique_location_list)
     
-    #print(unique_location_list)
-    
     num_years = len(unique_year_list)
     num_location = len(unique_location_list)
     index_array = []
@@ -47,7 +45,8 @@ def printAnalysis(df):
     
     i = 0
     while i < num_years:
-        year_to_crime.append(unCrimePerYear(unique_year_list[i], df))
+        #year_to_crime.append(unCrimePerYear(unique_year_list[i], df))
+        year_to_crime.append(question1(unique_year_list[i], df))
         i =  i + 1
     print("\n")
     
@@ -56,12 +55,19 @@ def printAnalysis(df):
     df_tests = convertDF(lists, 'counts')
     
     i = 0
+    print("\n")
+    print(getTime() + " Show the total unique count of crimes per year sorted in descending order: ") 
+    print("---------------------------------------------")
     while i < num_years:
-        print("The amount of unique crimes in the year " + str(df_tests.year.iloc[i]) + " is: " + str(df_tests.counts.iloc[i])) 
+        print(getTime() + " The amount of unique crimes in the year " 
+                + str(df_tests.year.iloc[i]) + " is: " + str(df_tests.counts.iloc[i])) 
         i = i + 1
     print("\n")
     # ----- Start of work for question 2 ----- #
     i = 0
+    print(getTime() + " Show the top 5 areas (AREA NAME) with the most crime events in " +  
+            "all years (Sorted by the # of crime events)")
+    print("---------------------------------------------")
     while i < num_location:
         #print('Checking location to crime with: ' + unique_location_list[i]) 
         location_to_crime.append(unCrimePerLocation(unique_location_list[i], df))
@@ -70,14 +76,16 @@ def printAnalysis(df):
     # make a dataframe in another function
     lists = {'location' : unique_location_list, 'counts': location_to_crime}
     df_tests = convertDF(lists, 'counts')    
-    print("\n")
     i = 0
     while i < 5:
-        print("The amount of unique crimes in the area " + str(df_tests.location.iloc[i]) + " is: " + str(df_tests.counts.iloc[i])) 
+        print(getTime() + " The amount of unique crimes in the area " + str(df_tests.location.iloc[i]) + " is: " + str(df_tests.counts.iloc[i])) 
         i = i + 1
-    print("\n")
 
     
+    # ---------- Start of question 3 ---------- #
+    print("\n")
+    print(getTime() + " Show all the months and the unique total count of crimes sorted in increasing order")
+    print("---------------------------------------------")
     regex_pattern = [] 
     regex_pattern.append("^01/\d{2}/\d{4}")
     regex_pattern.append("^02/\d{2}/\d{4}")
@@ -95,7 +103,7 @@ def printAnalysis(df):
     month = ["January", "Feburary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     i = 0
     while i < 12:
-        date_to_crime.append(unCrimePerMonth(regex_pattern[i], df)) 
+        date_to_crime.append(question3(regex_pattern[i], df)) 
         i = i + 1
     
     # make a dataframe in another function
@@ -104,10 +112,15 @@ def printAnalysis(df):
     
     i = 11
     while i > -1:
-        print("The amount of unique crimes in the month " + df_tests.month.iloc[i] + " is: " + str(df_tests.counts.iloc[i])) 
+        print(getTime() + " The amount of unique crimes in the month " + 
+                df_tests.month.iloc[i] + " is: " + str(df_tests.counts.iloc[i])) 
         i = i - 1
 
     # ---------- Start of question 4 ---------- #
+    print("\n")
+    print(getTime() +  " Show the top 10 streets with the most crimes in LA in 2019" + 
+            " Also display the total amount of crimes in each street.") 
+    print("---------------------------------------------")
     column_list = list(df["LOCATION"].values)
     street_list = []
     street = r"\d+\s+(.+)"
@@ -124,12 +137,19 @@ def printAnalysis(df):
     top_10 = count.most_common(10)
     top_10 = list(top_10)
     for x in top_10:
-        print(str(x).strip())
+        print(getTime() + " " + str(x).strip())
 
     # ---------- Start of question 5 ---------- #
+    print("\n")
+    print(getTime() + " Show the top 5 most dangerous times (in hours) to be in Hollywood" + 
+            ". Also display the total amount of crimes in each hour.")
+    print("---------------------------------------------")
     CrimeInArea("Hollywood", df)
 
     # ---------- Start of question 6 ---------- #
+    print("\n")
+    print(getTime() + " Print the details of the crime that took the most time (in hours) to be reported")
+    print("---------------------------------------------")
     drno = df["DR_NO"]
     date_rptd = df["Date Rptd"]
     date_occ = df["DATE OCC"]
@@ -152,6 +172,9 @@ def printAnalysis(df):
     print(df[df['DR_NO'] == searchval])
    
     # -------- Start of Question 7 -------- #
+    print("\n")
+    print(getTime() + " Show the 10 top most common crime types (Crm Cd Desc) overall across all years.")
+    print("---------------------------------------------")
     column_list = list(df["Crm Cd Desc"].values)
 
     count = Counter(column_list)
@@ -160,10 +183,14 @@ def printAnalysis(df):
     print("\nTop 10 most common crime types:")
     loopcount = 1
     for x in top_10:
-        print(str(loopcount) + ") " + str(x[0]))
+        print(getTime() + str(loopcount) + " " + str(x[0]))
         loopcount += 1
     
     # -------- Start of Question 8 -------- #
+    print("\n")
+    print(getTime() + " Are women or men more likely to be victim of a crime in LA betwene lunch" + 
+        " time (11:00am and 1:00pm)?")
+    print("---------------------------------------------")
     location = df["LOCATION"]
     vict_sex = df["Vict Sex"]
     time_occ = df["TIME OCC"]
@@ -185,17 +212,88 @@ def printAnalysis(df):
         print("Females are more likely to be the victim")
     else:
         print("Males are more likely to be the victim")
-    print("Value: " + str(max(male, female)))
-    print("Compared to: " + str(min(male,female)))
-    print("Displacement: " + str(abs(male - female)))
+    print(getTime() + "Value: " + str(max(male, female)))
+    print(getTime() + "Compared to: " + str(min(male,female)))
+    print(getTime() + "Displacement: " + str(abs(male - female)))
     
+    # -------- Start of Question 9 -------- #
+    print("\n")
+    print(getTime() + " What is the month that has the most major credit card frauds in LA in 2019?")
+    print("---------------------------------------------")
+    i = 0
+    regex_pattern = []
+    regex_pattern.append("01/\d{2}/2019.")
+    regex_pattern.append("02/\d{2}/2019.")
+    regex_pattern.append("03/\d{2}/2019.")
+    regex_pattern.append("04/\d{2}/2019.")
+    regex_pattern.append("05/\d{2}/2019.")
+    regex_pattern.append("06/\d{2}/2019.")
+    regex_pattern.append("07/\d{2}/2019.")
+    regex_pattern.append("08/\d{2}/2019.")
+    regex_pattern.append("09/\d{2}/2019.")
+    regex_pattern.append("10/\d{2}/2019.")
+    regex_pattern.append("11/\d{2}/2019.")
+    regex_pattern.append("12/\d{2}/2019.")
+    card_crime = []
+    while i < 12:
+        card_crime.append(CardCrimePerMonth(regex_pattern[i], df))
+        i = i + 1
+    i = 0
+    while i < 12:
+        print(getTime() + " The amount of credit card fraud in the month " + month[i] + " and year 2019"
+                + " is: " + str(card_crime[i]))
+        i = i + 1
     
+    # -------- Start of Question 10 -------- #
+    print("\n")
+    print(getTime() + " What is the month that has the most major credit card frauds in LA in 2019?")
+    print("---------------------------------------------")
+    question10(df)
+
 # ------ Creates a dataframe and returns it ------ #
 def convertDF(lists, names):
     df = pd.DataFrame(lists)
     df_s = df.sort_values(names, ascending = False)
     return df_s
 
+def CardCrimePerMonth(element, df):
+    newdf = df[df["DATE OCC"].str.contains(element, regex=True)]
+    #print(df)
+    crimedesc = "CREDIT CARDS, FRAUD USE ($950 & UNDER"
+    newArr = newdf[newdf["Crm Cd Desc"] == crimedesc]
+    #newArr = df[df["year"] == element]
+    #print(newArr)
+    count = len(newArr)
+    return count
+
+def question10(df):
+    element = "12/\d{2}/2018."
+    newdf = df[df["DATE OCC"].str.contains(element, regex=True)]
+    agedf = newdf[newdf["Vict Age"] >= 65]
+    area_list = agedf["AREA NAME"].values
+    area_list = merge_sort(list(area_list))
+    area = []
+    occurence = []
+    i = 0
+    j = 0
+    counter = 0
+    while j < len(unique_location_list) and i < len(area_list):
+        counter = 0
+        x = area_list[i]
+        while i < len(area_list) and area_list[i] == x:
+            counter = counter + 1
+            i = i + 1
+
+        area.append(area_list[i-1])
+        occurence.append(counter)
+        j = j + 1
+
+    lists = {'area' : area, 'occurences': occurence}
+    df = pd.DataFrame(lists)
+
+    df = df.sort_values(by=["occurences"], ascending=False)
+    print(getTime())
+    print(df.head(5).to_string(index=False))
 
 def CrimeInArea(element, df):
     count = 0
@@ -226,7 +324,8 @@ def CrimeInArea(element, df):
     df = pd.DataFrame(lists)
     df = df.sort_values(by=["occurence"], ascending=False)
 
-    print(df.head(5))
+    print(getTime()) 
+    print(df.head(5).to_string(index=False))
     #print(df_tests)
 
 
@@ -234,7 +333,7 @@ def CrimeInArea(element, df):
 
 
 # ----- All months and the unique total count of crimes per month ----- #
-def unCrimePerMonth(element, df):
+def question3(element, df):
     count = 0
     
     # get the dataframe where it's only that location
@@ -265,7 +364,7 @@ def unCrimePerLocation(element, df):
 
 
 # ----- Function to check the unqiue crimes per year ----- # 
-def unCrimePerYear(element, df):
+def question1(element, df):
     count = 0
     
     # get the dataframe where it's only that year
@@ -892,7 +991,6 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
                 print("Time to load " + str(total_time) + " seconds\n")
                 df_loaded = 1
                 df2 = df.copy()
-                print(df2)
             elif (load_opt == 2): 
                 df = pd.read_csv('Crime_Data_from_2020_to_2021.csv')
                 print(getTime() + " Total Columns Read: " + str(len(df.columns))) 
@@ -937,14 +1035,14 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
             else:
                 print("No dataframe has been loaded\n")
     # Error Handling
-    except ValueError as e:
-        print("ValueError:", e)
-    except KeyboardInterrupt:
-        print("\nCTRL+C or Cmd+C was pressed")
-    except TypeError as e:
-        print("A debug error has occured somewhere", e)
-    except NameError:
-        print("File has not been loaded yet")
+    #except ValueError as e:
+    #    print("ValueError:", e)
+    #except KeyboardInterrupt:
+    #    print("\nCTRL+C or Cmd+C was pressed")
+    #except TypeError as e:
+    #    print("A debug error has occured somewhere", e)
+    #except NameError:
+    #    print("File has not been loaded yet")
     except FileNotFoundError:
         print("This file either does not exist or an unexpected error has occured")
     finally:
