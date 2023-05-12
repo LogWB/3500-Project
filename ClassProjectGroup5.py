@@ -839,7 +839,7 @@ def searchFunction(df):
         element = input("Select: ")
         # If the user wants to look for a date...
         if (date_query):
-            valid_date = re.match("^\d{2}/\d{2}/\d{4}$", element) 
+            valid_date = re.match("^\d{1,2}/\d{2}/\d{4}$", element) 
             # Format is valid, get out of this loop
             if (valid_date):
                 break
@@ -935,7 +935,7 @@ def init_loadPrompt():
     load_prompt += "\n" + getTime() + " Select the number of the file to load from the list below:"
     load_prompt += "\nPlease select an option:"
     load_prompt += "\n[1] Crime_Data_from_2017_to_2019.csv"
-    load_prompt += "\n[2] Crime_Data_from_2020_to_2021.csv"
+    load_prompt += "\n[2] Crime_Data_presentation.csv"
     load_prompt += "\n[3] Test.csv"
     load_prompt += "\n" + getTime() + ": "
     return load_prompt
@@ -984,7 +984,7 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
                 df2 = df.copy()
             elif (load_opt == 2): 
                 start_time = time.time()
-                df = pd.read_csv('Crime_Data_from_2020_to_2021.csv') 
+                df = pd.read_csv('Crime_Data_presentation.csv') 
                 df = df.drop("Crm Cd 2", axis=1)
                 df = df.drop("Crm Cd 3", axis=1)
                 df = df.drop("Crm Cd 4", axis=1)
