@@ -105,7 +105,29 @@ def printAnalysis(df):
     while i > -1:
         print("The amount of unique crimes in the month " + df_tests.month.iloc[i] + " is: " + str(df_tests.counts.iloc[i])) 
         i = i - 1
-    
+
+    # ---------- Start of question 4 ---------- #
+    column_list = list(df["LOCATION"].values)
+    street_list = []
+    street = r"\d+\s+(.+)"
+    i = 0
+    for x in column_list:
+        street_found = re.match(street, column_list[i])
+        if street_found:
+            street_name = street_found.group(1)
+            street_list.append(street_name)
+        i = i + 1
+    unique_street_list = list(set(street_list))
+
+    count = Counter(street_list)
+    top_10 = count.most_common(10)
+    top_10 = list(top_10)
+    for x in top_10:
+        print(str(x).strip())
+
+
+
+
     # ---------- Start of question 6 ---------- #
     drno = df["DR_NO"]
     date_rptd = df["Date Rptd"]
@@ -127,6 +149,7 @@ def printAnalysis(df):
     print('\n')
     searchval = df_tests.DRNO[0]
     print(df[df['DR_NO'] == searchval])
+   
     
     
 # ------ Creates a dataframe and returns it ------ #
