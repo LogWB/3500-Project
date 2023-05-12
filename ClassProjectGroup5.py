@@ -163,6 +163,33 @@ def printAnalysis(df):
         print(str(loopcount) + ") " + str(x[0]))
         loopcount += 1
     
+    # -------- Start of Question 8 -------- #
+    location = df["LOCATION"]
+    vict_sex = df["Vict Sex"]
+    time_occ = df["TIME OCC"]
+    pattern = r"\w*..LA"
+    
+    lists = {'LOC' : location, 'VS': vict_sex, 'TO': time_occ}
+    df_tests = convertDF(lists, 'TO')
+    
+    df_tests = df_tests[df_tests['LOC'].str.contains('LA', case=False)]
+    
+    df_tests = df_tests[(df_tests['TO'] >= 1100) & (df_tests['TO'] <= 1300)]
+    count = Counter(df_tests['VS'])
+    
+    print('\n')
+    male = count['M']
+    female = count['F']
+    
+    if (male < female):
+        print("Females are more likely to be the victim")
+    else:
+        print("Males are more likely to be the victim")
+    print("Value: " + str(max(male, female)))
+    print("Compared to: " + str(min(male,female)))
+    print("Displacement: " + str(abs(male - female)))
+    
+    
 # ------ Creates a dataframe and returns it ------ #
 def convertDF(lists, names):
     df = pd.DataFrame(lists)
