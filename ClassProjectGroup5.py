@@ -15,6 +15,7 @@ string_value = 0 # Flag for if we are dealing with a string, used in sorting alg
 unique_year_list = [] 
 unique_crime_list = [] 
 unique_location_list = [] 
+unique_month_list = [] 
 # class func: - Messes up exploring the data
 
 # ---------- Analysis ---------- # 
@@ -25,6 +26,7 @@ def printAnalysis(df):
     unique_year_list = [] 
     unique_crime_list = [] 
     unique_location_list = [] 
+    unique_month_list = []
 
     year_df = df["year"]
     location_df = df["AREA NAME"]
@@ -46,10 +48,12 @@ def printAnalysis(df):
     while i < num_years:
         year_to_crime.append(unCrimePerYear(unique_year_list[i], df))
         i =  i + 1
+    print("\n")
     i = 0
     while i < num_years:
         print("The amount of unique crimes in the year " + str(unique_year_list[i]) + " is: " + str(year_to_crime[i])) 
         i = i + 1
+    print("\n")
     # ----- Start of work for question 2 ----- #
     i = 0
     while i < num_location:
@@ -58,11 +62,52 @@ def printAnalysis(df):
         #print(location_to_crime)
         i =  i + 1
     i = 0
+    print("\n")
     while i < num_location:
         print("The amount of unique crimes in the area " + str(unique_location_list[i]) + " is: " + str(location_to_crime[i])) 
         i = i + 1
+    print("\n")
 
+    
+    regex_pattern = [] 
+    regex_pattern.append("^01/\d{2}/\d{4}")
+    regex_pattern.append("^02/\d{2}/\d{4}")
+    regex_pattern.append("^03/\d{2}/\d{4}")
+    regex_pattern.append("^04/\d{2}/\d{4}")
+    regex_pattern.append("^05/\d{2}/\d{4}")
+    regex_pattern.append("^06/\d{2}/\d{4}")
+    regex_pattern.append("^07/\d{2}/\d{4}")
+    regex_pattern.append("^08/\d{2}/\d{4}")
+    regex_pattern.append("^09/\d{2}/\d{4}")
+    regex_pattern.append("^10/\d{2}/\d{4}")
+    regex_pattern.append("^11/\d{2}/\d{4}")
+    regex_pattern.append("^12/\d{2}/\d{4}")
+    date_to_crime = [] 
+    month = ["January", "Feburary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    i = 0
+    while i < 12:
+        date_to_crime.append(unCrimePerMonth(regex_pattern[i], df)) 
+        i = i + 1
+    i = 0
+    while i < 12:
+        print("The amount of unique crimes in the month " + month[i] + " is: " + str(date_to_crime[i])) 
+        i = i + 1
+    
 
+# ----- All months and the unique total count of crimes per month ----- #
+def unCrimePerMonth(element, df):
+    count = 0
+    
+    # get the dataframe where it's only that location
+    df = df[df["DATE OCC"].str.match(element)]
+    #print(df)
+    newArr = df["Crm Cd Desc"]
+    #print(df)
+    #print(newArr)
+    
+    # get the count of unique crimes
+    count =  unCountFunc(newArr, " ")
+    return count
 
 # ----- Top 5 areas w/ most crime events per year ----- #
 def unCrimePerLocation(element, df):
