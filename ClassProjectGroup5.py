@@ -66,12 +66,12 @@ def printAnalysis(df):
         location_to_crime.append(unCrimePerLocation(unique_location_list[i], df))
         #print(location_to_crime)
         i =  i + 1
-     # make a dataframe in another function
+    # make a dataframe in another function
     lists = {'location' : unique_location_list, 'counts': location_to_crime}
     df_tests = convertDF(lists, 'counts')    
     print("\n")
     i = 0
-    while i < num_location:
+    while i < 5:
         print("The amount of unique crimes in the area " + str(df_tests.location.iloc[i]) + " is: " + str(df_tests.counts.iloc[i])) 
         i = i + 1
     print("\n")
@@ -96,11 +96,40 @@ def printAnalysis(df):
     while i < 12:
         date_to_crime.append(unCrimePerMonth(regex_pattern[i], df)) 
         i = i + 1
-    i = 0
-    while i < 12:
-        print("The amount of unique crimes in the month " + month[i] + " is: " + str(date_to_crime[i])) 
-        i = i + 1
     
+    # make a dataframe in another function
+    lists = {'month' : month, 'counts': date_to_crime}
+    df_tests = convertDF(lists, 'counts')
+    
+    i = 11
+    while i > -1:
+        print("The amount of unique crimes in the month " + df_tests.month.iloc[i] + " is: " + str(df_tests.counts.iloc[i])) 
+        i = i - 1
+    
+    # ---------- Start of question 6 ---------- #
+    drno = df["DR_NO"]
+    date_rptd = df["Date Rptd"]
+    date_occ = df["DATE OCC"]
+    time_occ = df["TIME OCC"]
+    
+    # make a dataframe in another function
+    lists = {'DRNO' : drno, 'DR': date_rptd, 'DO': date_occ, 'TO': time_occ}
+    df_tests = convertDF(lists, 'DRNO')
+    
+    df_tests['DR'] = pd.to_datetime(df_tests['DR'], format='%m/%d/%Y %I:%M:%S %p')
+    df_tests['DO'] = pd.to_datetime(df_tests['DO'], format='%m/%d/%Y %I:%M:%S %p') 
+    
+    df_tests['Difference'] = df_tests['DR'] - df_tests['DO']
+    df_tests['Difference'] = (df_tests['Difference'].dt.total_seconds() / 3600) + df_tests['TO']
+    
+    df_tests = df_tests.sort_values('Difference', ascending = False)
+    
+    print('\n')
+    searchval = df_tests.DRNO[0]
+    print(df[df['DR_NO'] == searchval])
+    
+    
+# ------ Creates a dataframe and returns it ------ #
 def convertDF(lists, names):
     df = pd.DataFrame(lists)
     df_s = df.sort_values(names, ascending = False)
@@ -460,7 +489,7 @@ def maxFunc(Arr):
     maximum = Arr[(size-1)]
     return maximum
 
-# -------- Max Function -------- #
+# -------- Mode Function -------- #
 def modeFunc(Arr):
     mode = {}
     
@@ -810,15 +839,16 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
             else:
                 print("No dataframe has been loaded\n")
     # Error Handling
-    #except ValueError as e:
-    #    print("ValueError:", e)
+    except ValueError as e:
+        print("ValueError:", e)
     except KeyboardInterrupt:
         print("\nCTRL+C or Cmd+C was pressed")
     except TypeError as e:
         print("A debug error has occured somewhere", e)
-    #except NameError:
-    #    print("File has not been loaded yet")
+    except NameError:
+        print("File has not been loaded yet")
     except FileNotFoundError:
         print("This file either does not exist or an unexpected error has occured")
     finally:
         print("Returning to main menu: ")
+        
