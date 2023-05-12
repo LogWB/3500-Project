@@ -9,7 +9,7 @@
 import pandas as pd
 import time 
 import re 
-import func as func
+#import func as func
 from collections import Counter
 
 df_loaded = 0 # Flag for if we have loaded a csv into a dataframe
@@ -18,7 +18,6 @@ unique_year_list = []
 unique_crime_list = [] 
 unique_location_list = [] 
 unique_month_list = [] 
-# class func: - Messes up exploring the data
 
 # ---------- Analysis ---------- # 
 def printAnalysis(df):
@@ -42,7 +41,6 @@ def printAnalysis(df):
     year_to_crime = [] 
     i = 0
     while i < num_years:
-        #year_to_crime.append(unCrimePerYear(unique_year_list[i], df))
         year_to_crime.append(question1(unique_year_list[i], df))
         i =  i + 1
     print("\n")
@@ -76,7 +74,6 @@ def printAnalysis(df):
     i = 0
     while i < num_location:
         #print('Checking location to crime with: ' + unique_location_list[i]) 
-        #location_to_crime.append(unCrimePerLocation(unique_location_list[i], df))
         location_to_crime.append(question2(unique_location_list[i], df))
         #print(location_to_crime)
         i =  i + 1
@@ -162,7 +159,6 @@ def printAnalysis(df):
     print(getTime() + " Show the top 5 most dangerous times (in hours) to be in Hollywood" + 
             ". Also display the total amount of crimes in each hour.")
     print("---------------------------------------------")
-    #CrimeInArea("Hollywood", df)
     question5("Hollywood", df)
 
     
@@ -243,9 +239,9 @@ def printAnalysis(df):
         print("Females are more likely to be the victim")
     else:
         print("Males are more likely to be the victim")
-    print(getTime() + "Value: " + str(max(male, female)))
-    print(getTime() + "Compared to: " + str(min(male,female)))
-    print(getTime() + "Displacement: " + str(abs(male - female)))
+    print(getTime() + " Value: " + str(max(male, female)))
+    print(getTime() + " Compared to: " + str(min(male,female)))
+    print(getTime() + " Displacement: " + str(abs(male - female)))
     
     
 
@@ -271,15 +267,20 @@ def printAnalysis(df):
     regex_pattern.append("12/\d{2}/2019.")
     card_crime = []
     while i < 12:
-        #card_crime.append(CardCrimePerMonth(regex_pattern[i], df))
         card_crime.append(question9(regex_pattern[i], df))
         i = i + 1
     i = 0
-    while i < 12:
-        print(getTime() + " The amount of credit card fraud in the month " + month[i] + " and year 2019"
-                + " is: " + str(card_crime[i]))
-        i = i + 1
+    #while i < 12:
+    #    print(getTime() + " The amount of credit card fraud in the month " + month[i] + " and year 2019"
+    #            + " is: " + str(card_crime[i]))
+    #    i = i + 1
     
+    lists = {'month' : month, 'fraud': card_crime}
+    tempdf = pd.DataFrame(lists)
+
+    tempdf = tempdf.sort_values(by=["fraud"], ascending=False)
+    print(getTime())
+    print(tempdf.head(1).to_string(index=False))
     
 
 
@@ -297,7 +298,6 @@ def convertDF(lists, names):
     df_s = df.sort_values(names, ascending = False)
     return df_s
 
-# ----- Function to check the unqiue crimes per year ----- # 
 def question1(element, df):
     count = 0
     
@@ -309,32 +309,24 @@ def question1(element, df):
     count =  unCountFunc(newArr, " ")
     return count
 
-# ----- Top 5 areas w/ most crime events per year ----- #
 def question2(element, df):
     count = 0
     
     # get the dataframe where it's only that location
     df = df[df["AREA NAME"] == element]
     newArr = df["Crm Cd Desc"]
-    #print(df)
-    #print(newArr)
     
     # get the count of unique crimes
     count =  unCountFunc(newArr, " ")
     return count
 
-# ----- All months and the unique total count of crimes per month ----- #
 def question3(element, df):
     count = 0
     
     # get the dataframe where it's only that location
     df = df[df["DATE OCC"].str.match(element)]
-    #print(df)
     newArr = df["Crm Cd Desc"]
-    #print(df)
-    #print(newArr)
     
-    # get the count of unique crimes
     count =  unCountFunc(newArr, " ")
     return count
 
@@ -345,7 +337,6 @@ def question5(element, df):
     df = df[df["AREA NAME"] == element]
     newArr = df["TIME OCC"]
     unique_time = unCountFunc(newArr, " " )
-    #print(newArr)
     sorted_arr = merge_sort(list(newArr))
     time = []
     occurence = []
@@ -374,11 +365,9 @@ def question5(element, df):
 
 def question9(element, df):
     newdf = df[df["DATE OCC"].str.contains(element, regex=True)]
-    #print(df)
     crimedesc = "CREDIT CARDS, FRAUD USE ($950 & UNDER"
     newArr = newdf[newdf["Crm Cd Desc"] == crimedesc]
     #newArr = df[df["year"] == element]
-    #print(newArr)
     count = len(newArr)
     return count
 
@@ -412,14 +401,7 @@ def question10(df):
     print(df.head(5).to_string(index=False))
 
 
-
-
-
-
-
-
-
-
+# ~~~~~~~~~~ End of Code Related to Analysis ~~~~~~~~~ #
 
 # ---------- Function to help verify input ---------- # 
 def prompt_verification(select, _min, _max) :
@@ -548,7 +530,6 @@ def colStat(df):
             modeval = modeFunc(sorted_arr)
             print("Mode: " + str(modeval[0]))
         
-            # Variance Section using mean
             try:
                 vari = varianceFunc(lambda x: x > 0, newArr, mean)
                 print("Variance: " + str(vari))
@@ -558,12 +539,7 @@ def colStat(df):
                 print("Variance: NaN")
                 print("Standard Deviation: NaN")
             
-            # Standard Deviation from Variance
         
-            #print(newArr)
-            #print(sorted_arr)
-            #print("According to this: " + str(newArr[len(newArr)-1]))
-            #Used to test
             number = minFunc(sorted_arr)
             print("Minimum: " + str(number))
         
@@ -679,44 +655,6 @@ def dropZero(array):
     array = [value for value in array if value != 0]
     return array
 
-def partition(arr, low, high):
-    pivot = len(arr[high])/2
-    i = low - 1
-    j = high + 1
-
-    while True:
-        i += 1
-        while arr[i] < pivot:
-            i += 1
-
-        j -= 1
-        while arr[j] > pivot:
-            j -= 1
-
-        if i >= j:
-            return j
-
-        arr[i], arr[j] = arr[j], arr[i]
-
-
-def quicksort(arr):
-    stack = []
-    stack.append((0, len(arr) - 1))
-
-    while stack:
-        low, high = stack.pop()
-
-        if low < high:
-            pivot = partition(arr, low, high)
-
-            if pivot - low < high - pivot:
-                stack.append((low, pivot))
-                stack.append((pivot + 1, high))
-            else:
-                stack.append((pivot + 1, high))
-                stack.append((low, pivot))
-
-    return arr
 
 # -------- Min Function -------- #
 def minFunc(Arr):
@@ -748,7 +686,7 @@ def modeFunc(Arr):
     
 # -------- Print Function -------- #
 def printDataFrame(df):
-    print("\n(4) Select how many rows you would like to print:")
+    print("\n(4) Select how many rows you would like to print: (Press Ctrl+C to cancel)")
     print("**********")
     print("41) 100 Rows ")
     print("42) 1000 Rows ")
@@ -802,7 +740,6 @@ def convertInt(Arr):
 # 1) Make a function to divide all the arrays until the length of the array is 1, meaning fully divided
 # 2) Send our arrays into a "merge" helper which will sort the array, combine it into a bigger array,
 #    and it will keep doing that until everything is back as a whole
-# 3) O(n log n) because of how much space we're using making all these arrays 
 
 def merge_sort(arr):
     # If the arr size is equal to one, we are finally done
@@ -851,10 +788,6 @@ def merge(left, right):
             merged_arr.append(left_val)
             left_in += 1
             # Jump to the top of the while look and check again if the left has an element less than right
-        #elif (right[right_in] <=left[left_in]):
-        # Implied already that the first element in the right index is the smallest in that array
-        # because we've been comparing the left array with everything in the right array
-        # so just append it
         else: 
             merged_arr.append(right_val)
             right_in += 1
@@ -885,14 +818,14 @@ def merge(left, right):
 def searchFunction(df):
     num_col = listColumns(df)
     selected_col = 0
-    print("Selected a column to search in: ")
+    print("Selected a column to search in: (Press Ctrl+C to cancel)")
     selected_col = checkValid(1, num_col, selected_col)
-    #print("SELECTED_COL = " + selected_col)
     array = df.columns
     colName = array[int(selected_col)-1]
-    #print("You selected: " + colName)
-    # \/ This will print it as a column \/
+    
+    # \/ This will print it as a column, useful for debugging \/
     #print(df[colName].to_string(index=False))
+    
     column_list = list(df[colName].values)
     #print(column_list)
     date_query = re.match("(?i)^date", colName)
@@ -910,14 +843,13 @@ def searchFunction(df):
             # Format is valid, get out of this loop
             if (valid_date):
                 break
-            # Format is invalid, get out of this loop
+            # Format is invalid, continue loop
             else:
                 print("Invalid date format. Please try again, or press Ctrl+C to exit")
                 pass
         # Not a date query, break out of this loop
         else:
             break
-    #print("You selected: " + element)
     i = 0
     count = 0
     j = 0
@@ -933,13 +865,10 @@ def searchFunction(df):
             dataframe_element = temp[0]
         else:
             dataframe_element = str(column_list[i])
-        #print("Comparing: " + str(dataframe_element)) 
         if (str(element) == dataframe_element):
-            #print("Found it: " + str(x) + " and " + str(column_list[i]))
             index_found.append(i)
             # Keep track of how many elements found with count
             count = count + 1
-            # Use `i` to march the index forward
             i = i + 1
         else:
             i = i + 1
@@ -970,6 +899,7 @@ def searchFunction(df):
     #        print("Invalid option, returning to main menu")
 
 # -------------------------------------------------------------------------#
+# Start of main menu interface
 
 main_menu = "Main Menu:" 
 main_menu += "\n**********"
@@ -980,8 +910,7 @@ main_menu += "\n(4) Print Data Set"
 main_menu += "\n(5) Quit"
 main_menu += "\nSelect: "
 
-explore_menu = "Exploring Data:" 
-explore_menu += "\n(Output of each option is a placeholder)" 
+explore_menu = "\nExploring Data:" 
 explore_menu += "\n**********"
 explore_menu += "\n(21) List all columns:"
 explore_menu += "\n(22) Drop columns:"
@@ -999,9 +928,9 @@ def getTime():
 
 
 # ---------- Function to initialize load data menu ---------- # 
-# This is so that the strings will have updated their times every time this is called
+# Used a function so that the strings will have updated their times every time this is called
 def init_loadPrompt():
-    load_prompt = "Load Data Set:"  
+    load_prompt = "\nLoad Data Set:"  
     load_prompt += "\n**********"
     load_prompt += "\n" + getTime() + " Select the number of the file to load from the list below:"
     load_prompt += "\nPlease select an option:"
@@ -1074,13 +1003,11 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
                 print("**********")
                 listColumns(df)
             elif (explore_opt == 22): 
-                #using this as a test
                 if df.empty: 
                     print("No columns to drop")
                 else: 
                     df = dropColumn(df)
             elif (explore_opt == 23):
-                print("You selected describe all columns\n")
                 #try:
                 if df.empty:
                     print("Dataframe is empty")
@@ -1094,7 +1021,6 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
                     print("No columns to search")
                 else: 
                     searchFunction(df)
-                #print("You selected search element in all columns\n")
             elif (explore_opt == 25):
                 print("You selected back to main menu\n")
         if (option == 3):
