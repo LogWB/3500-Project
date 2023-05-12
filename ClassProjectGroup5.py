@@ -983,19 +983,37 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
                 df_loaded = 1
                 df2 = df.copy()
             elif (load_opt == 2): 
-                df = pd.read_csv('Crime_Data_from_2020_to_2021.csv')
+                start_time = time.time()
+                df = pd.read_csv('Crime_Data_from_2020_to_2021.csv') 
+                df = df.drop("Crm Cd 2", axis=1)
+                df = df.drop("Crm Cd 3", axis=1)
+                df = df.drop("Crm Cd 4", axis=1)
+                df = df.drop("Cross Street", axis=1)
+                end_time = time.time()
+                total_time = (end_time) - (start_time)
+                total_time = round(total_time, 5)
                 print(getTime() + " Total Columns Read: " + str(len(df.columns))) 
                 print(getTime() + " Total Rows Read: " + str(len(df)))
                 print("File loaded successfully!")    
-                print("Time to load <blank> sec\n")
+                print("Time to load " + str(total_time) + " seconds\n")
                 df_loaded = 1
+                df2 = df.copy()
             elif (load_opt == 3):
+                start_time = time.time()
                 df = pd.read_csv('Test.csv')
+                df = df.drop("Crm Cd 2", axis=1)
+                df = df.drop("Crm Cd 3", axis=1)
+                df = df.drop("Crm Cd 4", axis=1)
+                df = df.drop("Cross Street", axis=1)
+                end_time = time.time()
+                total_time = (end_time) - (start_time)
+                total_time = round(total_time, 5)
                 print(getTime() + " Total Columns Read: " + str(len(df.columns))) 
                 print(getTime() + " Total Rows Read: " + str(len(df)))
                 print("File loaded successfully!")    
-                print("Time to load <blank> sec\n")
+                print("Time to load " + str(total_time) + " seconds\n")
                 df_loaded = 1
+                df2 = df.copy()
         if (option == 2):
             explore_opt = menu(explore_menu, 21, 25)
             if (explore_opt == 21):
