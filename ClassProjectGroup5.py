@@ -126,8 +126,8 @@ def printAnalysis(df):
     for x in top_10:
         print(str(x).strip())
 
-
-
+    # ---------- Start of question 5 ---------- #
+    CrimeInArea("Hollywood", df)
 
     # ---------- Start of question 6 ---------- #
     drno = df["DR_NO"]
@@ -168,6 +168,43 @@ def convertDF(lists, names):
     df = pd.DataFrame(lists)
     df_s = df.sort_values(names, ascending = False)
     return df_s
+
+
+def CrimeInArea(element, df):
+    count = 0
+
+    # get the dataframe where it's only that location
+    df = df[df["AREA NAME"] == element]
+    newArr = df["TIME OCC"]
+    unique_time = unCountFunc(newArr, " " )
+    #print(newArr)
+    sorted_arr = merge_sort(list(newArr))
+    time = []
+    occurence = []
+    i = 0
+    j = 0
+    counter = 0
+    while j < unique_time and i < len(sorted_arr):
+        counter = 0
+        x = sorted_arr[i]
+        while i < len(sorted_arr) and sorted_arr[i] == x:
+            counter = counter + 1
+            i = i + 1
+
+        time.append(sorted_arr[i-1])
+        occurence.append(counter)
+        j = j + 1
+
+    lists = {'time' : time, 'occurence': occurence}
+    df = pd.DataFrame(lists)
+    df = df.sort_values(by=["occurence"], ascending=False)
+
+    print(df.head(5))
+    #print(df_tests)
+
+
+
+
 
 # ----- All months and the unique total count of crimes per month ----- #
 def unCrimePerMonth(element, df):
