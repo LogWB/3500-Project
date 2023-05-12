@@ -151,7 +151,17 @@ def printAnalysis(df):
     searchval = df_tests.DRNO[0]
     print(df[df['DR_NO'] == searchval])
    
-    
+    # -------- Start of Question 7 -------- #
+    column_list = list(df["Crm Cd Desc"].values)
+
+    count = Counter(column_list)
+    top_10 = count.most_common(10)
+    top_10 = list(top_10)
+    print("\nTop 10 most common crime types:")
+    loopcount = 1
+    for x in top_10:
+        print(str(loopcount) + ") " + str(x[0]))
+        loopcount += 1
     
 # ------ Creates a dataframe and returns it ------ #
 def convertDF(lists, names):
