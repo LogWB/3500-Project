@@ -49,9 +49,14 @@ def printAnalysis(df):
         year_to_crime.append(unCrimePerYear(unique_year_list[i], df))
         i =  i + 1
     print("\n")
+    
+    # make a dataframe in another function
+    lists = {'year' : unique_year_list, 'counts': year_to_crime}
+    df_tests = convertDF(lists, 'counts')
+    
     i = 0
     while i < num_years:
-        print("The amount of unique crimes in the year " + str(unique_year_list[i]) + " is: " + str(year_to_crime[i])) 
+        print("The amount of unique crimes in the year " + str(df_tests.year.iloc[i]) + " is: " + str(df_tests.counts.iloc[i])) 
         i = i + 1
     print("\n")
     # ----- Start of work for question 2 ----- #
@@ -61,10 +66,13 @@ def printAnalysis(df):
         location_to_crime.append(unCrimePerLocation(unique_location_list[i], df))
         #print(location_to_crime)
         i =  i + 1
-    i = 0
+     # make a dataframe in another function
+    lists = {'location' : unique_location_list, 'counts': location_to_crime}
+    df_tests = convertDF(lists, 'counts')    
     print("\n")
+    i = 0
     while i < num_location:
-        print("The amount of unique crimes in the area " + str(unique_location_list[i]) + " is: " + str(location_to_crime[i])) 
+        print("The amount of unique crimes in the area " + str(df_tests.location.iloc[i]) + " is: " + str(df_tests.counts.iloc[i])) 
         i = i + 1
     print("\n")
 
@@ -93,6 +101,10 @@ def printAnalysis(df):
         print("The amount of unique crimes in the month " + month[i] + " is: " + str(date_to_crime[i])) 
         i = i + 1
     
+    def convertDF(lists, names):
+        df = pd.DataFrame(lists)
+        df_s = df.sort_values(names, ascending = False)
+        return df_s
 
 # ----- All months and the unique total count of crimes per month ----- #
 def unCrimePerMonth(element, df):
