@@ -14,21 +14,35 @@ df_loaded = 0 # Flag for if we have loaded a csv into a dataframe
 string_value = 0 # Flag for if we are dealing with a string, used in sorting algorithm
 unique_year_list = [] 
 unique_crime_list = [] 
+unique_location_list = [] 
 # class func: - Messes up exploring the data
 
 # ---------- Analysis ---------- # 
 def printAnalysis(df):
     # ----- Start of work for question 1 ----- #
     global unique_year_list
-    newArr = df["year"]
-    unCountFunc(newArr, "year")
-    #print(unique_item_list)
-    i = 0
+    global unique_location_list
+    unique_year_list = [] 
+    unique_crime_list = [] 
+    unique_location_list = [] 
+
+    year_df = df["year"]
+    location_df = df["AREA NAME"]
+    unCountFunc(year_df, "year")
+    unCountFunc(location_df, "AREA NAME")
+    
     unique_year_list = merge_sort(unique_year_list)
+    unique_location_list = merge_sort(unique_location_list)
+    
+    #print(unique_location_list)
+    
     num_years = len(unique_year_list)
+    num_location = len(unique_location_list)
     index_array = []
-    #print(unique_year_list)
     year_to_crime = [] 
+    location_to_crime = [] 
+    
+    i = 0
     while i < num_years:
         year_to_crime.append(unCrimePerYear(unique_year_list[i], df))
         i =  i + 1
@@ -36,14 +50,38 @@ def printAnalysis(df):
     while i < num_years:
         print("The amount of unique crimes in the year " + str(unique_year_list[i]) + " is: " + str(year_to_crime[i])) 
         i = i + 1
-
-
-
-def unCrimePerYear(element, df):
-    count = 0
+    # ----- Start of work for question 2 ----- #
     i = 0
-    j = 0
-    index_found = []
+    while i < num_location:
+        #print('Checking location to crime with: ' + unique_location_list[i]) 
+        location_to_crime.append(unCrimePerLocation(unique_location_list[i], df))
+        #print(location_to_crime)
+        i =  i + 1
+    i = 0
+    while i < num_location:
+        print("The amount of unique crimes in the area " + str(unique_location_list[i]) + " is: " + str(location_to_crime[i])) 
+        i = i + 1
+
+
+
+# ----- Top 5 areas w/ most crime events per year ----- #
+def unCrimePerLocation(element, df):
+    count = 0
+    
+    # get the dataframe where it's only that location
+    df = df[df["AREA NAME"] == element]
+    newArr = df["Crm Cd Desc"]
+    #print(df)
+    #print(newArr)
+    
+    # get the count of unique crimes
+    count =  unCountFunc(newArr, " ")
+    return count
+
+
+
+# ----- Function to check the unqiue crimes per year ----- # 
+def unCrimePerYear(element, df):
     count = 0
     
     # get the dataframe where it's only that year
@@ -239,6 +277,8 @@ def unCountFunc(Arr, colName):
     newArr = Arr.drop_duplicates()
     newArr = dropZero(newArr)
     counter = 0
+    custom_list = [] 
+    custom_flag = 0
     for item in newArr:
         if item:
             counter += 1
@@ -246,6 +286,9 @@ def unCountFunc(Arr, colName):
                 unique_year_list.append(item)
             if (colName == "crime"):
                 unique_crime_list.append(item)
+            if (colName == "AREA NAME"):
+                unique_location_list.append(item)
+
     return counter
 
 # ---------- Median Function ---------- #
@@ -664,6 +707,8 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
                 print("File loaded successfully!") 
                 print("Time to load " + str(total_time) + " seconds\n")
                 df_loaded = 1
+                df2 = df.copy()
+                print(df2)
             elif (load_opt == 2): 
                 df = pd.read_csv('Crime_Data_from_2020_to_2021.csv')
                 print(getTime() + " Total Columns Read: " + str(len(df.columns))) 
@@ -701,7 +746,7 @@ while(cont): # This will keep going until the user inputs '5' at the main menu
             elif (explore_opt == 25):
                 print("You selected back to main menu\n")
         if (option == 3):
-                printAnalysis(df)
+                printAnalysis(df2)
         if (option == 4):
             if(df_loaded==1):
                 printDataFrame(df)
