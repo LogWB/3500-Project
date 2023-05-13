@@ -314,7 +314,7 @@ def question2(element, df):
     
     # get the dataframe where it's only that location
     df = df[df["AREA NAME"] == element]
-    newArr = df["Crm Cd Desc"]
+    newArr = df["DR_NO"]
     
     # get the count of unique crimes
     count =  unCountFunc(newArr, " ")
